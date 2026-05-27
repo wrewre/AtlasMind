@@ -16,13 +16,8 @@ x-common-env: &common-env
   REDIS_PORT:          "6379"
   LITELLM_URL:         http://litellm:4000
   LITELLM_API_KEY:     ${LITELLM_MASTER_KEY:-sk-mindmap-master-key-2025}
+  NVIDIA_API_KEY:      ${NVIDIA_API_KEY}
   GEMINI_API_KEY:      ${GEMINI_API_KEY}
-  GROQ_API_KEY:        ${GROQ_API_KEY}
-  GROQ_API_KEY_2:      ${GROQ_API_KEY_2:-}
-  GROQ_API_KEY_3:      ${GROQ_API_KEY_3:-}
-  GROQ_API_KEY_4:      ${GROQ_API_KEY_4:-}
-  TOGETHER_API_KEY:    ${TOGETHER_API_KEY:-}
-  GROQ_MODEL:          ${GROQ_MODEL:-llama-3.3-70b-versatile}
   MAX_RETRIES:         "${MAX_RETRIES:-3}"
   CHUNK_TIMEOUT:       "${CHUNK_TIMEOUT:-210}"
   PYTHONUNBUFFERED:    "1"
@@ -53,12 +48,8 @@ services:
     volumes:
       - ./litellm_config.yaml:/app/config.yaml:ro
     environment:
-      TOGETHER_API_KEY:   ${TOGETHER_API_KEY:-}
+      NVIDIA_API_KEY:     ${NVIDIA_API_KEY}
       GEMINI_API_KEY:     ${GEMINI_API_KEY}
-      GROQ_API_KEY:       ${GROQ_API_KEY}
-      GROQ_API_KEY_2:     ${GROQ_API_KEY_2:-}
-      GROQ_API_KEY_3:     ${GROQ_API_KEY_3:-}
-      GROQ_API_KEY_4:     ${GROQ_API_KEY_4:-}
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-mindmap-master-key-2025}
       REDIS_HOST:         redis
       REDIS_PORT:         "6379"
