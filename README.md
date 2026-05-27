@@ -500,17 +500,4 @@ class MyAgent(BaseAgent):
             "confidence_overall": 0.8,
         }
 ```
-### Swapping the LLM
-Because the system uses LiteLLM as an enterprise gateway, you never need to touch the Python code to change the LLM! 
 
-Simply edit the `litellm_config.yaml` file in the root directory to add new models (like OpenAI, Anthropic, or local Ollama), configure their rate limits, and map them to the routing strategy.
----
-## Design Decisions & Trade-offs
-**Redis Streams over Kafka**: Redis Streams provide consumer groups, at-least-once delivery, and persistence — sufficient for this scale — without Kafka's operational overhead (ZooKeeper, broker cluster, topic partitions).
-**Agents share a Dockerfile**: All 4 agents use `services/agents/Dockerfile` with different `CMD` overrides. This reduces image count while maintaining service isolation. In production, consider separate images for independent versioning.
-**JSON graph in Redis**: The final graph is stored as a Redis JSON blob (TTL: 7 days) for sub-millisecond frontend retrieval, alongside optional Neo4j persistence. This avoids a database query on every page load.
-**SSE over WebSocket for progress**: SSE is simpler (HTTP/1.1, auto-reconnect, no handshake) for the one-directional progress stream. WebSocket is used for richer bidirectional communication when needed.
-**Confidence × agent_weight**: Agent outputs are weighted before merging. The concept agent (weight=1.0) is trusted most; sentiment (weight=0.7) least. This prevents sentiment noise from polluting the core graph.
----
-## License
-MIT License — see LICENSE for details.
