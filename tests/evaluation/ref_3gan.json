@@ -1,0 +1,23 @@
+{
+  "global_summary": "This document explores the fundamental challenges in training Generative Adversarial Networks (GANs), such as vanishing gradients, non-convergence, and mode collapse. It discusses structural components like the Generator and Discriminator, and mathematical frameworks like the Min-Max game and Jensen-Shannon divergence, while introducing Wasserstein GANs as a potential solution.",
+  "nodes": [
+    {"id": "gan", "label": "Generative Adversarial Network", "category": "CONCEPT"},
+    {"id": "generator", "label": "Generator", "category": "CONCEPT"},
+    {"id": "discriminator", "label": "Discriminator", "category": "CONCEPT"},
+    {"id": "mode_collapse", "label": "Mode Collapse", "category": "ISSUE"},
+    {"id": "mode_dropping", "label": "Mode Dropping", "category": "ISSUE"},
+    {"id": "wasserstein_gan", "label": "Wasserstein GAN", "category": "TECHNOLOGY"},
+    {"id": "min_max_game", "label": "Min-Max Game", "category": "CONCEPT"},
+    {"id": "non_convergence", "label": "Non-Convergence", "category": "ISSUE"},
+    {"id": "jensen_shannon_divergence", "label": "Jensen-Shannon Divergence", "category": "CONCEPT"},
+    {"id": "vanishing_gradients", "label": "Vanishing Gradients", "category": "ISSUE"}
+  ],
+  "edges": [
+    {"source": "gan", "target": "generator", "relation_type": "uses"},
+    {"source": "gan", "target": "discriminator", "relation_type": "uses"},
+    {"source": "generator", "target": "min_max_game", "relation_type": "implements"},
+    {"source": "gan", "target": "mode_collapse", "relation_type": "causes"},
+    {"source": "wasserstein_gan", "target": "mode_collapse", "relation_type": "solves"},
+    {"source": "vanishing_gradients", "target": "non_convergence", "relation_type": "causes"}
+  ]
+}

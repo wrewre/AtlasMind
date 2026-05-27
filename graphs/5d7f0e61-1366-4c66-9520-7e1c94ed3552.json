@@ -1,0 +1,41 @@
+{
+  "document_id": "5d7f0e61-1366-4c66-9520-7e1c94ed3552",
+  "nodes": [],
+  "edges": [],
+  "tree": {
+    "id": "root",
+    "label": "Document",
+    "children": [],
+    "category": "ROOT"
+  },
+  "conflicts": [],
+  "global_summary": "",
+  "insights": {
+    "global_summary": "",
+    "themes": [],
+    "concept_descriptions": {}
+  },
+  "total_chunks_processed": 2,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "agentic_metrics": {
+    "llm_usage": {},
+    "strategy_usage": {},
+    "avg_react_iterations": 0.0,
+    "react_retry_count": 0,
+    "total_critic_filtered": 0,
+    "avg_processing_ms": 0,
+    "fallback_rate_pct": 0.0,
+    "domain": "scientific",
+    "orchestrator_strategy": "relationship_first",
+    "orchestrator_decided_by": "groq"
+  },
+  "stats": {
+    "total_agent_results": 2,
+    "failed_agent_results": 2,
+    "concepts_before_merge": 0,
+    "concepts_after_merge": 0,
+    "relationships_before_merge": 0,
+    "relationships_after_merge": 0,
+    "conflicts_detected": 0
+  }
+}

@@ -1,0 +1,316 @@
+{
+  "document_id": "eaee741d-22f5-413d-8f22-4919cac82f32",
+  "nodes": [
+    {
+      "id": "lex",
+      "label": "Lex",
+      "category": "TECHNOLOGY",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "yacc",
+      "label": "YACC",
+      "category": "TECHNOLOGY",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "compiler",
+      "label": "Compiler",
+      "category": "TECHNOLOGY",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "symbol_table",
+      "label": "Symbol Table",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "syntax_tree",
+      "label": "Syntax Tree",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "lexical_analyzer",
+      "label": "Lexical Analyzer",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "syntax_analyzer",
+      "label": "Syntax Analyzer",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "conflict_resolution",
+      "label": "Conflict Resolution",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "parser",
+      "label": "Parser",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "lexer",
+      "label": "Lexer",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "arithmetic_expression",
+      "label": "Arithmetic Expression",
+      "category": "CONCEPT",
+      "confidence": 0.66,
+      "mention_count": 1,
+      "sentiment": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "lex",
+      "target": "lexical_analyzer",
+      "relation_type": "implements",
+      "label": "implements lexical analyzer",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "yacc",
+      "target": "syntax_analyzer",
+      "relation_type": "implements",
+      "label": "implements syntax analyzer",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "compiler",
+      "target": "lex",
+      "relation_type": "uses",
+      "label": "uses lex",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "compiler",
+      "target": "yacc",
+      "relation_type": "uses",
+      "label": "uses yacc",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "lexical_analyzer",
+      "target": "symbol_table",
+      "relation_type": "related_to",
+      "label": "related to symbol table",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "syntax_analyzer",
+      "target": "syntax_tree",
+      "relation_type": "produces",
+      "label": "produces syntax tree",
+      "confidence": 0.7,
+      "weight": 0.7
+    }
+  ],
+  "tree": {
+    "id": "document_root",
+    "label": "Document",
+    "category": "ROOT",
+    "confidence": 1.0,
+    "mention_count": 11,
+    "sentiment": null,
+    "children": [
+      {
+        "id": "compiler",
+        "label": "Compiler",
+        "category": "TECHNOLOGY",
+        "confidence": 0.88,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "symbol_table",
+        "label": "Symbol Table",
+        "category": "CONCEPT",
+        "confidence": 0.88,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "syntax_tree",
+        "label": "Syntax Tree",
+        "category": "CONCEPT",
+        "confidence": 0.88,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "lexical_analyzer",
+        "label": "Lexical Analyzer",
+        "category": "CONCEPT",
+        "confidence": 0.88,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "lex",
+            "label": "Lex",
+            "category": "TECHNOLOGY",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "syntax_analyzer",
+        "label": "Syntax Analyzer",
+        "category": "CONCEPT",
+        "confidence": 0.88,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "yacc",
+            "label": "YACC",
+            "category": "TECHNOLOGY",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "conflict_resolution",
+        "label": "Conflict Resolution",
+        "category": "CONCEPT",
+        "confidence": 0.77,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "cluster_concept",
+        "label": "Concept",
+        "category": "CLUSTER",
+        "confidence": 0.75,
+        "mention_count": 3,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "parser",
+            "label": "Parser",
+            "category": "CONCEPT",
+            "confidence": 0.77,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "lexer",
+            "label": "Lexer",
+            "category": "CONCEPT",
+            "confidence": 0.77,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "arithmetic_expression",
+            "label": "Arithmetic Expression",
+            "category": "CONCEPT",
+            "confidence": 0.66,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "conflicts": [],
+  "global_summary": "The text describes the process of building a compiler using Lex and YACC, including the creation of a lexical analyzer and syntax analyzer, and the resolution of conflicts in the grammar.",
+  "insights": {
+    "global_summary": "The text describes the process of building a compiler using Lex and YACC, including the creation of a lexical analyzer and syntax analyzer, and the resolution of conflicts in the grammar.",
+    "themes": [
+      "Lex",
+      "YACC",
+      "Compiler",
+      "Symbol Table",
+      "Syntax Tree",
+      "Lexical Analyzer",
+      "Syntax Analyzer",
+      "Conflict Resolution"
+    ],
+    "concept_descriptions": {}
+  },
+  "total_chunks_processed": 4,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "agentic_metrics": {
+    "llm_usage": {
+      "groq": 1
+    },
+    "strategy_usage": {
+      "balanced": 1
+    },
+    "avg_react_iterations": 1.0,
+    "react_retry_count": 0,
+    "total_critic_filtered": 1,
+    "avg_processing_ms": 3425,
+    "fallback_rate_pct": 100.0,
+    "domain": "technical",
+    "orchestrator_strategy": "relationship_first",
+    "orchestrator_decided_by": "groq"
+  },
+  "stats": {
+    "total_agent_results": 4,
+    "failed_agent_results": 3,
+    "concepts_before_merge": 11,
+    "concepts_after_merge": 11,
+    "relationships_before_merge": 6,
+    "relationships_after_merge": 6,
+    "conflicts_detected": 0
+  },
+  "performance_metrics": {
+    "ingestion_start": null,
+    "graph_completion": "2026-04-27T05:22:08.302857",
+    "latency_seconds": 0,
+    "total_chunks": 4,
+    "processed_chunks": 4,
+    "chunk_coverage": 100.0,
+    "worker_nodes_est": "b7fc40ce74de"
+  }
+}

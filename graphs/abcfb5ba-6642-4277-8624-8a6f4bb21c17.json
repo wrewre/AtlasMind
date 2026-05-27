@@ -1,0 +1,447 @@
+{
+  "document_id": "abcfb5ba-6642-4277-8624-8a6f4bb21c17",
+  "nodes": [
+    {
+      "id": "gan",
+      "label": "Generative Adversarial Network",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "generative_adversarial_networks",
+      "label": "Generative Adversarial Networks",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "discriminative_models",
+      "label": "Discriminative Models",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "generative_models",
+      "label": "Generative Models",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "generator",
+      "label": "Generator",
+      "category": "CONCEPT",
+      "confidence": 0.96,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "discriminator",
+      "label": "Discriminator",
+      "category": "CONCEPT",
+      "confidence": 0.96,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "min_max_game",
+      "label": "Min-Max Game Approach",
+      "category": "CONCEPT",
+      "confidence": 0.935,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "deep_learning",
+      "label": "Deep Learning",
+      "category": "CONCEPT",
+      "confidence": 0.935,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "jensen_shannon_divergence",
+      "label": "Jensen-Shannon Divergence",
+      "category": "CONCEPT",
+      "confidence": 0.9,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "vanishing_gradients",
+      "label": "Vanishing Gradients",
+      "category": "CONCEPT",
+      "confidence": 0.9,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "non_convergence",
+      "label": "Non-Convergence",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "mode_collapse",
+      "label": "Mode Collapse",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "mode_dropping",
+      "label": "Mode Dropping",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "machine_learning",
+      "label": "Machine Learning",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "latent_features",
+      "label": "Latent Features",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "adversarial_training",
+      "label": "Adversarial Training",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "wasserstein_gan",
+      "label": "Wasserstein GAN",
+      "category": "CONCEPT",
+      "confidence": 0.825,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "min_max_game_approach",
+      "label": "Min-max Game Approach",
+      "category": "CONCEPT",
+      "confidence": 0.825,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "saddle_point",
+      "label": "Saddle Point",
+      "category": "CONCEPT",
+      "confidence": 0.81,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "alternative_divergences",
+      "label": "Alternative Divergences",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "non_saturating_heuristic",
+      "label": "Non-Saturating Heuristic",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "objective_function",
+      "label": "Objective Function",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "gan_architecture",
+      "label": "GAN Architecture",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "gan",
+      "target": "generator",
+      "relation_type": "uses",
+      "label": "uses generator",
+      "confidence": 0.9,
+      "weight": 0.9
+    },
+    {
+      "source": "gan",
+      "target": "discriminator",
+      "relation_type": "uses",
+      "label": "uses discriminator",
+      "confidence": 0.9,
+      "weight": 0.9
+    },
+    {
+      "source": "generator",
+      "target": "min_max_game",
+      "relation_type": "implements",
+      "label": "implements min-max game",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "discriminator",
+      "target": "jensen_shannon_divergence",
+      "relation_type": "related_to",
+      "label": "related to Jensen-Shannon divergence",
+      "confidence": 0.75,
+      "weight": 0.75
+    },
+    {
+      "source": "vanishing_gradients",
+      "target": "non_convergence",
+      "relation_type": "causes",
+      "label": "causes non-convergence",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "generative_adversarial_networks",
+      "target": "generative_models",
+      "relation_type": "is_a",
+      "label": "type of generative model",
+      "confidence": 0.9,
+      "weight": 0.9
+    },
+    {
+      "source": "generative_adversarial_networks",
+      "target": "adversarial_training",
+      "relation_type": "uses",
+      "label": "uses adversarial training",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "generator",
+      "target": "discriminator",
+      "relation_type": "contrasts_with",
+      "label": "contrasts with discriminator",
+      "confidence": 0.8,
+      "weight": 0.8
+    }
+  ],
+  "tree": {
+    "id": "document_root",
+    "label": "Document",
+    "category": "ROOT",
+    "confidence": 1.0,
+    "mention_count": 23,
+    "sentiment": null,
+    "children": [
+      {
+        "id": "discriminator",
+        "label": "Discriminator",
+        "category": "CONCEPT",
+        "confidence": 0.96,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "jensen_shannon_divergence",
+        "label": "Jensen-Shannon Divergence",
+        "category": "CONCEPT",
+        "confidence": 0.9,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "vanishing_gradients",
+        "label": "Vanishing Gradients",
+        "category": "CONCEPT",
+        "confidence": 0.9,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "saddle_point",
+        "label": "Saddle Point",
+        "category": "CONCEPT",
+        "confidence": 0.81,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "gan",
+        "label": "Generative Adversarial Network",
+        "category": "CONCEPT",
+        "confidence": 1.0,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "discriminative_models",
+        "label": "Discriminative Models",
+        "category": "CONCEPT",
+        "confidence": 0.99,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "cluster_concept",
+        "label": "Concept",
+        "category": "CLUSTER",
+        "confidence": 0.75,
+        "mention_count": 17,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "generative_adversarial_networks",
+            "label": "Generative Adversarial Networks",
+            "category": "CONCEPT",
+            "confidence": 1.0,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "generative_models",
+            "label": "Generative Models",
+            "category": "CONCEPT",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": [
+              {
+                "id": "generative_adversarial_networks",
+                "label": "Generative Adversarial Networks",
+                "category": "CONCEPT",
+                "confidence": 1.0,
+                "mention_count": 1,
+                "sentiment": null,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "generator",
+            "label": "Generator",
+            "category": "CONCEPT",
+            "confidence": 0.96,
+            "mention_count": 2,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "min_max_game",
+            "label": "Min-Max Game Approach",
+            "category": "CONCEPT",
+            "confidence": 0.935,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": [
+              {
+                "id": "generator",
+                "label": "Generator",
+                "category": "CONCEPT",
+                "confidence": 0.96,
+                "mention_count": 2,
+                "sentiment": null,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "deep_learning",
+            "label": "Deep Learning",
+            "category": "CONCEPT",
+            "confidence": 0.935,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "conflicts": [],
+  "global_summary": "Generative Adversarial Networks (GANs) are a type of deep learning model that uses adversarial training to generate new images. GANs consist of a generator and discriminator, which are trained against each other to produce realistic images. The generator tries to fool the discriminator, while the discriminator tries to distinguish between real and fake images. The text discusses Generative Adversarial Networks (GANs), their components, and the challenges they face, including vanishing gradients, non-convergence, mode collapse, and mode dropping. It also mentions potential solutions, such as using alternative divergences and the non-saturating heuristic.",
+  "insights": {
+    "global_summary": "Generative Adversarial Networks (GANs) are a type of deep learning model that uses adversarial training to generate new images. GANs consist of a generator and discriminator, which are trained against each other to produce realistic images. The generator tries to fool the discriminator, while the discriminator tries to distinguish between real and fake images. The text discusses Generative Adversarial Networks (GANs), their components, and the challenges they face, including vanishing gradients, non-convergence, mode collapse, and mode dropping. It also mentions potential solutions, such as using alternative divergences and the non-saturating heuristic.",
+    "themes": [
+      "Generator",
+      "Discriminator",
+      "Jensen-Shannon Divergence",
+      "Vanishing Gradients",
+      "Saddle Point",
+      "Generative Adversarial Network",
+      "Generative Adversarial Networks",
+      "Discriminative Models"
+    ],
+    "concept_descriptions": {}
+  },
+  "total_chunks_processed": 3,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "agentic_metrics": {
+    "llm_usage": {
+      "cache": 1,
+      "groq": 1
+    },
+    "strategy_usage": {
+      "concept_first": 2
+    },
+    "avg_react_iterations": 1.0,
+    "react_retry_count": 0,
+    "total_critic_filtered": 1,
+    "avg_processing_ms": 25145,
+    "fallback_rate_pct": 50.0,
+    "domain": "technical",
+    "orchestrator_strategy": "relationship_first",
+    "orchestrator_decided_by": "groq"
+  },
+  "stats": {
+    "total_agent_results": 3,
+    "failed_agent_results": 1,
+    "concepts_before_merge": 28,
+    "concepts_after_merge": 23,
+    "relationships_before_merge": 8,
+    "relationships_after_merge": 8,
+    "conflicts_detected": 0
+  },
+  "performance_metrics": {
+    "ingestion_start": null,
+    "graph_completion": "2026-04-27T03:20:59.645915",
+    "latency_seconds": 0,
+    "total_chunks": 3,
+    "processed_chunks": 3,
+    "chunk_coverage": 100.0,
+    "worker_nodes_est": "58c66a087cb1"
+  }
+}

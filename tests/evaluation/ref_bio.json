@@ -1,0 +1,20 @@
+{
+  "global_summary": "The chapter outlines the structure and function of an ecosystem, identifying both biotic and abiotic components. It details how these components interact in processes like energy flow, decomposition, productivity, and nutrient cycling.",
+  "nodes": [
+    {"id": "ecosystem", "label": "Ecosystem", "category": "CONCEPT"},
+    {"id": "biotic_components", "label": "Biotic Components", "category": "CONCEPT"},
+    {"id": "abiotic_components", "label": "Abiotic Components", "category": "CONCEPT"},
+    {"id": "productivity", "label": "Productivity", "category": "PROCESS"},
+    {"id": "decomposition", "label": "Decomposition", "category": "PROCESS"},
+    {"id": "energy_flow", "label": "Energy Flow", "category": "PROCESS"},
+    {"id": "nutrient_cycling", "label": "Nutrient Cycling", "category": "PROCESS"}
+  ],
+  "edges": [
+    {"source": "biotic_components", "target": "ecosystem", "relation_type": "part_of"},
+    {"source": "abiotic_components", "target": "ecosystem", "relation_type": "part_of"},
+    {"source": "productivity", "target": "ecosystem", "relation_type": "occurs_in"},
+    {"source": "decomposition", "target": "ecosystem", "relation_type": "occurs_in"},
+    {"source": "energy_flow", "target": "ecosystem", "relation_type": "occurs_in"},
+    {"source": "nutrient_cycling", "target": "ecosystem", "relation_type": "occurs_in"}
+  ]
+}

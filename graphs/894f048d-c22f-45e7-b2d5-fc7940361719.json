@@ -1,0 +1,531 @@
+{
+  "document_id": "894f048d-c22f-45e7-b2d5-fc7940361719",
+  "nodes": [
+    {
+      "id": "productivity",
+      "label": "Productivity",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "decomposition",
+      "label": "Decomposition",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "ecosystem_structure",
+      "label": "Ecosystem Structure",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "ecosystem",
+      "label": "Ecosystem",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "primary_production",
+      "label": "Primary Production",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "gross_primary_productivity",
+      "label": "Gross Primary Productivity",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "net_primary_productivity",
+      "label": "Net Primary Productivity",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "detritus",
+      "label": "Detritus",
+      "category": "CONCEPT",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "photosynthesis",
+      "label": "Photosynthesis",
+      "category": "PROCESS",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "respiration",
+      "label": "Respiration",
+      "category": "PROCESS",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "energy_flow",
+      "label": "Energy Flow",
+      "category": "CONCEPT",
+      "confidence": 0.935,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "biotic_components",
+      "label": "Biotic Components",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "abiotic_components",
+      "label": "Abiotic Components",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "nutrient_cycling",
+      "label": "Nutrient Cycling",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "aquatic_ecosystem",
+      "label": "Aquatic Ecosystem",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "autotrophs",
+      "label": "Autotrophs",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "heterotrophs",
+      "label": "Heterotrophs",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "earthworm",
+      "label": "Earthworm",
+      "category": "ORGANIZATION",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "plant_species",
+      "label": "Plant Species",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "environmental_factors",
+      "label": "Environmental Factors",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "phytoplankton",
+      "label": "Phytoplankton",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "zooplankton",
+      "label": "Zooplankton",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "ecosystem_structure",
+      "target": "biotic_components",
+      "relation_type": "part_of",
+      "label": "Biotic Components of Ecosystem Structure",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "ecosystem_structure",
+      "target": "abiotic_components",
+      "relation_type": "part_of",
+      "label": "Abiotic Components of Ecosystem Structure",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "energy_flow",
+      "target": "productivity",
+      "relation_type": "enables",
+      "label": "Energy Flow Enables Productivity",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "productivity",
+      "target": "decomposition",
+      "relation_type": "related_to",
+      "label": "Productivity Related to Decomposition",
+      "confidence": 0.6,
+      "weight": 0.6
+    },
+    {
+      "source": "decomposition",
+      "target": "nutrient_cycling",
+      "relation_type": "enables",
+      "label": "Decomposition Enables Nutrient Cycling",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "aquatic_ecosystem",
+      "target": "phytoplankton",
+      "relation_type": "part_of",
+      "label": "Phytoplankton Part of Aquatic Ecosystem",
+      "confidence": 0.6,
+      "weight": 0.6
+    },
+    {
+      "source": "ecosystem",
+      "target": "primary_production",
+      "relation_type": "requires",
+      "label": "requires for functioning",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "primary_production",
+      "target": "photosynthesis",
+      "relation_type": "uses",
+      "label": "uses for production",
+      "confidence": 0.9,
+      "weight": 0.9
+    },
+    {
+      "source": "gross_primary_productivity",
+      "target": "net_primary_productivity",
+      "relation_type": "causes",
+      "label": "causes NPP",
+      "confidence": 0.9,
+      "weight": 0.9
+    },
+    {
+      "source": "net_primary_productivity",
+      "target": "decomposition",
+      "relation_type": "enables",
+      "label": "enables decomposition",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "earthworm",
+      "target": "decomposition",
+      "relation_type": "enables",
+      "label": "enables decomposition",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "plant_species",
+      "target": "primary_production",
+      "relation_type": "causes",
+      "label": "affects primary production",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "environmental_factors",
+      "target": "primary_production",
+      "relation_type": "related_to",
+      "label": "affects primary production",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "respiration",
+      "target": "gross_primary_productivity",
+      "relation_type": "contrasts_with",
+      "label": "contrasts with GPP",
+      "confidence": 0.8,
+      "weight": 0.8
+    }
+  ],
+  "tree": {
+    "id": "document_root",
+    "label": "Document",
+    "category": "ROOT",
+    "confidence": 1.0,
+    "mention_count": 22,
+    "sentiment": null,
+    "children": [
+      {
+        "id": "productivity",
+        "label": "Productivity",
+        "category": "CONCEPT",
+        "confidence": 1.0,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "energy_flow",
+            "label": "Energy Flow",
+            "category": "CONCEPT",
+            "confidence": 0.935,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "respiration",
+            "label": "Respiration",
+            "category": "PROCESS",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "earthworm",
+            "label": "Earthworm",
+            "category": "ORGANIZATION",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ecosystem",
+        "label": "Ecosystem",
+        "category": "CONCEPT",
+        "confidence": 0.99,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "primary_production",
+        "label": "Primary Production",
+        "category": "CONCEPT",
+        "confidence": 0.99,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "gross_primary_productivity",
+        "label": "Gross Primary Productivity",
+        "category": "CONCEPT",
+        "confidence": 0.99,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "detritus",
+        "label": "Detritus",
+        "category": "CONCEPT",
+        "confidence": 0.99,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "photosynthesis",
+        "label": "Photosynthesis",
+        "category": "PROCESS",
+        "confidence": 0.99,
+        "mention_count": 1,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "cluster_concept",
+        "label": "Concept",
+        "category": "CLUSTER",
+        "confidence": 0.75,
+        "mention_count": 13,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "decomposition",
+            "label": "Decomposition",
+            "category": "CONCEPT",
+            "confidence": 1.0,
+            "mention_count": 2,
+            "sentiment": null,
+            "children": [
+              {
+                "id": "net_primary_productivity",
+                "label": "Net Primary Productivity",
+                "category": "CONCEPT",
+                "confidence": 0.99,
+                "mention_count": 1,
+                "sentiment": null,
+                "children": []
+              },
+              {
+                "id": "earthworm",
+                "label": "Earthworm",
+                "category": "ORGANIZATION",
+                "confidence": 0.88,
+                "mention_count": 1,
+                "sentiment": null,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "ecosystem_structure",
+            "label": "Ecosystem Structure",
+            "category": "CONCEPT",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "net_primary_productivity",
+            "label": "Net Primary Productivity",
+            "category": "CONCEPT",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "biotic_components",
+            "label": "Biotic Components",
+            "category": "CONCEPT",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": [
+              {
+                "id": "ecosystem_structure",
+                "label": "Ecosystem Structure",
+                "category": "CONCEPT",
+                "confidence": 0.99,
+                "mention_count": 1,
+                "sentiment": null,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "abiotic_components",
+            "label": "Abiotic Components",
+            "category": "CONCEPT",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "conflicts": [],
+  "global_summary": "The ecosystem is composed of biotic and abiotic components that interact through the flow of energy, with key processes including productivity, decomposition, and nutrient cycling. These processes are interconnected and crucial for the functioning of ecosystems, including aquatic ecosystems where phytoplankton, zooplankton, and other organisms play important roles. Primary production, driven by photosynthesis, is essential for ecosystem functioning and is influenced by factors such as plant species and environmental conditions. Decomposition, enabled by net primary productivity, is also vital and is facilitated by organisms like earthworms that break down detritus. Overall, the functioning of ecosystems relies on the complex interplay of these components and processes.",
+  "insights": {
+    "global_summary": "At its core, the document presents a comprehensive overview of the intricate dynamics that govern ecosystem functioning, with a particular emphasis on the interconnectedness of biotic and abiotic components. The central argument revolves around the notion that the flow of energy within these components is crucial for maintaining the delicate balance of ecosystems, and that key processes such as productivity, decomposition, and nutrient cycling are inextricably linked. The document highlights the importance of primary production, driven by photosynthesis, as the foundation upon which ecosystem functioning is built, and notes that this process is influenced by a complex array of factors, including plant species and environmental conditions.\n\nThe document sheds light on the critical roles played by various actors within ecosystems, including phytoplankton, zooplankton, autotrophs, and heterotrophs, which are all integral to the functioning of aquatic ecosystems such as ponds. Additionally, the document underscores the significance of decomposition, a process enabled by net primary productivity and facilitated by organisms such as earthworms, which break down detritus and recycle nutrients. The interplay between these components and processes is presented as a complex web of relationships, with each element influencing and being influenced by others, and the document suggests that understanding these relationships is essential for appreciating the intricate dynamics of ecosystem functioning.\n\nUltimately, the document presents a nuanced and multifaceted portrait of ecosystem functioning, one that emphasizes the interconnectedness and interdependence of various components and processes. The key takeaway is that ecosystems are complex, dynamic systems that rely on the harmonious functioning of multiple elements, and that any disruption to these systems can have far-reaching and potentially devastating consequences. By highlighting the critical importance of primary production, decomposition, and nutrient cycling, the document provides a compelling argument for the need to protect and preserve ecosystems, and to adopt a holistic and integrated approach to understanding and managing these complex systems.",
+    "themes": [
+      "Productivity",
+      "Decomposition",
+      "Ecosystem Structure",
+      "Ecosystem",
+      "Primary Production",
+      "Gross Primary Productivity",
+      "Net Primary Productivity",
+      "Detritus"
+    ],
+    "concept_descriptions": {
+      "productivity": "Productivity refers to the rate at which ecosystems produce new biomass, driven by primary production and influenced by factors such as nutrient availability and energy flow. It is a key process in maintaining ecosystem balance.",
+      "decomposition": "Decomposition is the process by which dead organic matter is broken down into simpler components, releasing nutrients back into the ecosystem and supporting nutrient cycling.",
+      "ecosystem_structure": "Ecosystem structure encompasses the organization and composition of biotic and abiotic components, which interact to form a complex network of relationships that govern ecosystem functioning.",
+      "ecosystem": "An ecosystem is a complex system consisting of biotic and abiotic components that interact to form a unified whole, with energy flow and nutrient cycling playing critical roles in maintaining its balance and functioning.",
+      "primary_production": "Primary production is the process by which plants, algae, and other organisms convert light energy into chemical energy through photosynthesis, forming the foundation of ecosystem productivity.",
+      "gross_primary_productivity": "Gross primary productivity is the total amount of energy fixed by photosynthesis, representing the initial input of energy into the ecosystem.",
+      "net_primary_productivity": "Net primary productivity is the energy remaining after respiration and other losses, representing the actual energy available to support ecosystem processes and productivity.",
+      "detritus": "Detritus refers to dead organic matter that serves as a food source for decomposers and supports nutrient cycling, playing a critical role in ecosystem functioning.",
+      "photosynthesis": "Photosynthesis is the process by which plants, algae, and other organisms convert light energy into chemical energy, driving primary production and supporting ecosystem productivity.",
+      "respiration": "Respiration is the process by which organisms break down organic matter to release energy, influencing net primary productivity and ecosystem energy flow.",
+      "energy_flow": "Energy flow refers to the movement of energy through the ecosystem, from primary production to consumption and decomposition, governing ecosystem functioning and balance.",
+      "biotic_components": "Biotic components include all living organisms within an ecosystem, from plants and animals to microorganisms, which interact with each other and their environment to form a complex web of relationships.",
+      "abiotic_components": "Abiotic components include non-living factors such as light, temperature, and nutrients, which influence ecosystem functioning and interact with biotic components to shape ecosystem structure and processes.",
+      "nutrient_cycling": "Nutrient cycling refers to the movement of nutrients through the ecosystem, from uptake by organisms to release through decomposition and excretion, supporting ecosystem productivity and balance.",
+      "aquatic_ecosystem": "Although not explicitly mentioned, an aquatic ecosystem would refer to a type of ecosystem that exists in water, with its own unique set of biotic and abiotic components and processes that govern its functioning."
+    }
+  },
+  "total_chunks_processed": 2,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "agentic_metrics": {
+    "llm_usage": {
+      "groq": 2
+    },
+    "strategy_usage": {
+      "balanced": 1,
+      "relationship_first": 1
+    },
+    "avg_react_iterations": 1.0,
+    "react_retry_count": 0,
+    "total_critic_filtered": 2,
+    "avg_processing_ms": 6583,
+    "fallback_rate_pct": 100.0,
+    "domain": "scientific",
+    "orchestrator_strategy": "relationship_first",
+    "orchestrator_decided_by": "groq"
+  },
+  "stats": {
+    "total_agent_results": 2,
+    "failed_agent_results": 0,
+    "concepts_before_merge": 24,
+    "concepts_after_merge": 22,
+    "relationships_before_merge": 14,
+    "relationships_after_merge": 14,
+    "conflicts_detected": 0
+  }
+}

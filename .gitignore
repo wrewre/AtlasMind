@@ -1,0 +1,32 @@
+# Environment — NEVER commit real API keys
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Node / Frontend
+node_modules/
+services/frontend/dist/
+services/frontend/.vite/
+
+# Docker
+*.log
+
+# Uploads & generated graphs
+services/api_gateway/uploads/
+services/graph_builder/graphs/
+docs/test_output.json
+
+# IDE
+.idea/
+.vscode/
+*.swp

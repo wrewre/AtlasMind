@@ -1,0 +1,238 @@
+version: "3.9"
+
+# ============================================================
+# Distributed Mind Map Generator — Docker Compose (Enterprise)
+#
+# New in v2:
+#   - LiteLLM Proxy: unified LLM gateway (rate limiting, fallbacks, caching)
+#   - Auth: JWT + SQLite (persisted volume)
+#   - History: per-user, 10 graphs max
+#   - Provider stack: Together.ai → Groq×4 → Gemini → Ollama
+# ============================================================
+
+x-common-env: &common-env
+  REDIS_URL:           redis://redis:6379/0
+  REDIS_HOST:          redis
+  REDIS_PORT:          "6379"
+  LITELLM_URL:         http://litellm:4000
+  LITELLM_API_KEY:     ${LITELLM_MASTER_KEY:-sk-mindmap-master-key-2025}
+  GEMINI_API_KEY:      ${GEMINI_API_KEY}
+  GROQ_API_KEY:        ${GROQ_API_KEY}
+  GROQ_API_KEY_2:      ${GROQ_API_KEY_2:-}
+  GROQ_API_KEY_3:      ${GROQ_API_KEY_3:-}
+  GROQ_API_KEY_4:      ${GROQ_API_KEY_4:-}
+  TOGETHER_API_KEY:    ${TOGETHER_API_KEY:-}
+  GROQ_MODEL:          ${GROQ_MODEL:-llama-3.3-70b-versatile}
+  MAX_RETRIES:         "${MAX_RETRIES:-3}"
+  CHUNK_TIMEOUT:       "${CHUNK_TIMEOUT:-210}"
+  PYTHONUNBUFFERED:    "1"
+
+services:
+  # ── Infrastructure ──────────────────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mindmap-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── LiteLLM Proxy — unified LLM gateway ────────────────────────────────────
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    environment:
+      TOGETHER_API_KEY:   ${TOGETHER_API_KEY:-}
+      GEMINI_API_KEY:     ${GEMINI_API_KEY}
+      GROQ_API_KEY:       ${GROQ_API_KEY}
+      GROQ_API_KEY_2:     ${GROQ_API_KEY_2:-}
+      GROQ_API_KEY_3:     ${GROQ_API_KEY_3:-}
+      GROQ_API_KEY_4:     ${GROQ_API_KEY_4:-}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-mindmap-master-key-2025}
+      REDIS_HOST:         redis
+      REDIS_PORT:         "6379"
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+
+
+  # ── API Gateway — with auth + history ───────────────────────────────────────
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api_gateway/Dockerfile
+    environment:
+      <<: *common-env
+      UPLOAD_DIR:  /app/uploads
+      REDIS_STREAM: document.ingested
+      JWT_SECRET:  ${JWT_SECRET:-change-me-in-production-use-256-bit-secret}
+      SQLITE_PATH: /app/data/mindmap.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads_data:/app/uploads
+      - sqlite_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      litellm:
+        condition: service_started
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── Document Ingestion ───────────────────────────────────────────────────────
+  document-ingestion:
+    build:
+      context: .
+      dockerfile: services/document_ingestion/Dockerfile
+    environment:
+      <<: *common-env
+    volumes:
+      - uploads_data:/app/uploads:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+  # ── Chunking Service ─────────────────────────────────────────────────────────
+  chunking-service:
+    build:
+      context: .
+      dockerfile: services/chunking_service/Dockerfile
+    environment:
+      <<: *common-env
+      CHUNK_SIZE:     "${CHUNK_SIZE:-4500}"
+      CHUNK_OVERLAP:  "${CHUNK_OVERLAP:-400}"
+      MIN_CHUNK_SIZE: "80"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+  # ── Orchestrator ─────────────────────────────────────────────────────────────
+  orchestrator:
+    build:
+      context: .
+      dockerfile: services/orchestrator/Dockerfile
+    environment:
+      <<: *common-env
+    depends_on:
+      redis:
+        condition: service_healthy
+      litellm:
+        condition: service_started
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+  # ── Unified Agent (1 per chunk) ──────────────────────────────────────────────
+  unified-agent:
+    build:
+      context: .
+      dockerfile: services/agents/Dockerfile
+    command: python /app/unified_agent/main.py
+    environment:
+      <<: *common-env
+      AGENT_TYPE: unified
+    depends_on:
+      redis:
+        condition: service_healthy
+      litellm:
+        condition: service_started
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+  # ── Consensus Engine ─────────────────────────────────────────────────────────
+  consensus-engine:
+    build:
+      context: .
+      dockerfile: services/consensus_engine/Dockerfile
+    environment:
+      <<: *common-env
+      VOTE_THRESHOLD:      "1"
+      CONF_THRESHOLD:      "${CONF_THRESHOLD:-0.35}"
+      EDGE_CONF_THRESHOLD: "${EDGE_CONF_THRESHOLD:-0.35}"
+      MAX_PROCESSING_WAIT: "${MAX_PROCESSING_WAIT:-300}"
+    depends_on:
+      redis:
+        condition: service_healthy
+      litellm:
+        condition: service_started
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+  # ── Graph Builder ────────────────────────────────────────────────────────────
+  graph-builder:
+    build:
+      context: .
+      dockerfile: services/graph_builder/Dockerfile
+    environment:
+      <<: *common-env
+      NEO4J_ENABLED:    "false"
+      GRAPH_OUTPUT_DIR: /app/graphs
+    volumes:
+      - ./graphs:/app/graphs
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - mindmap-net
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  uploads_data:
+  sqlite_data:      # persists user accounts and document history across restarts
+
+networks:
+  mindmap-net:
+    driver: bridge

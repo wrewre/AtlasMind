@@ -1,0 +1,79 @@
+/* Export Dropdown Panel */
+.export-panel {
+  position: relative;
+}
+
+.export-trigger {
+  /* Inherits from .header-icon-btn */
+}
+
+.export-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-3));
+  right: 0;
+  width: 200px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.05);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.export-header {
+  padding: var(--space-3) var(--space-4);
+  font-size: 10px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(255,255,255,0.02);
+}
+
+.export-opt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.export-opt:hover {
+  background: var(--bg-elevated);
+}
+
+.export-icon {
+  color: var(--accent-cyan);
+  opacity: 0.8;
+}
+.json-icon {
+  color: var(--accent-violet);
+}
+
+.export-text {
+  display: flex;
+  flex-direction: column;
+}
+.export-text span:first-child {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.export-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.export-divider {
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* Invisible overlay to catch outside clicks */
+.export-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}

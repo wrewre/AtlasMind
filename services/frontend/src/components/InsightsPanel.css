@@ -1,0 +1,270 @@
+.insights-panel {
+  height: 100%;
+  overflow-y: auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  background: var(--bg-deep, #07070f);
+}
+.insights-panel::-webkit-scrollbar { width: 4px; }
+.insights-panel::-webkit-scrollbar-track { background: transparent; }
+.insights-panel::-webkit-scrollbar-thumb { background: rgba(120,120,180,0.2); border-radius: 2px; }
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+.insights-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(124,58,237,0.14), rgba(0,229,255,0.07));
+  border: 1px solid rgba(124,58,237,0.22);
+  border-radius: 16px;
+}
+.insights-header-icon {
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #7c3aed 0%, #00e5ff 100%);
+  border-radius: 13px;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 24px rgba(124,58,237,0.35);
+}
+.insights-header-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #f0f0ff;
+  letter-spacing: -0.02em;
+}
+.insights-header-sub {
+  font-size: 11px;
+  color: rgba(180,180,255,0.45);
+  margin-top: 3px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+.insights-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.insights-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(160,160,220,0.6);
+}
+
+/* ── Summary ──────────────────────────────────────────────────────────── */
+.insights-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 22px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid rgba(0,229,255,0.4);
+  border-radius: 12px;
+}
+.insights-para {
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: rgba(210,210,250,0.85);
+  margin: 0;
+}
+
+/* ── Themes ───────────────────────────────────────────────────────────── */
+.insights-themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.insights-theme-chip {
+  padding: 6px 15px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.28);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(195,175,255,0.9);
+  cursor: default;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.insights-theme-chip:hover {
+  background: rgba(124,58,237,0.2);
+  border-color: rgba(124,58,237,0.5);
+  color: #fff;
+}
+
+/* ── Concept cards ────────────────────────────────────────────────────── */
+.insights-concepts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.insights-concept-card {
+  background: rgba(255,255,255,0.027);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 11px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+}
+.insights-concept-card:hover {
+  background: rgba(255,255,255,0.045);
+  border-color: rgba(255,255,255,0.12);
+}
+.insights-concept-card.expanded {
+  border-color: var(--concept-color, rgba(124,58,237,0.35));
+  border-width: 1.5px;
+  background: color-mix(in srgb, var(--concept-color, #7c3aed) 8%, transparent);
+}
+/* Persistent highlighted state — active until user interacts */
+.insights-concept-card.highlighted {
+  border-color: var(--concept-color, #7c3aed);
+  border-width: 2px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--concept-color, #7c3aed) 30%, transparent),
+              0 0 28px color-mix(in srgb, var(--concept-color, #7c3aed) 20%, transparent);
+  background: color-mix(in srgb, var(--concept-color, #7c3aed) 10%, transparent);
+}
+
+.concept-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+}
+.concept-card-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.concept-card-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.concept-card-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+.concept-card-cat {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+.concept-card-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(160,160,200,0.5);
+  flex-shrink: 0;
+}
+.concept-card-conf {
+  font-size: 10px;
+  color: rgba(160,160,200,0.55);
+}
+
+.concept-card-body {
+  padding: 0 15px 14px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.concept-card-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(195,195,240,0.82);
+  margin: 12px 0 10px;
+}
+.concept-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  color: rgba(140,140,190,0.5);
+}
+.concept-sentiment.pos { color: #00e676; }
+.concept-sentiment.neg { color: #ff1744; }
+.concept-sentiment.neu { color: rgba(140,140,190,0.5); }
+
+/* ── Empty state ──────────────────────────────────────────────────────── */
+.insights-empty {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 18px;
+}
+.insights-empty-icon { font-size: 52px; }
+.insights-empty-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: rgba(180,180,240,0.65);
+}
+.insights-empty-msg {
+  font-size: 13px;
+  color: rgba(130,130,180,0.5);
+  max-width: 320px;
+  line-height: 1.65;
+}
+
+/* ── Count badge ─────────────────────────────────────────────────────── */
+.insights-count-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-family: 'Space Mono', monospace;
+  background: rgba(124,58,237,0.18);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: rgba(195,175,255,0.8);
+  padding: 1px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* Highlight animation — fired when navigating from Graph/Mindmap to this card */
+@keyframes cardOpen {
+  0%   {
+    transform: translateY(-6px) scaleY(0.96);
+    opacity: 0.5;
+    box-shadow: none;
+    border-color: rgba(255,255,255,0.1);
+  }
+  15%  {
+    transform: translateY(0) scaleY(1.02);
+    opacity: 1;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--concept-color, #7c3aed) 40%, transparent),
+                0 0 40px color-mix(in srgb, var(--concept-color, #7c3aed) 30%, transparent);
+    border-color: var(--concept-color, #a78bfa);
+  }
+  40%  {
+    transform: translateY(0) scaleY(1);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--concept-color, #7c3aed) 30%, transparent),
+                0 0 24px color-mix(in srgb, var(--concept-color, #7c3aed) 20%, transparent);
+    border-color: color-mix(in srgb, var(--concept-color, #7c3aed) 80%, white);
+  }
+  70%  {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--concept-color, #7c3aed) 25%, transparent);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--concept-color, #7c3aed) 20%, transparent);
+    border-color: var(--concept-color, rgba(124,58,237,0.5));
+  }
+}
+.card-highlight {
+  animation: cardOpen 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: top center;
+}
+

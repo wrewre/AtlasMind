@@ -1,0 +1,609 @@
+{
+  "document_id": "f2ae9a53-6e16-498e-9ffc-6781bd2b0166",
+  "nodes": [
+    {
+      "id": "yacc_program",
+      "label": "YACC Program",
+      "category": "TECHNOLOGY",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "lex_program",
+      "label": "Lex Program",
+      "category": "TECHNOLOGY",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "arithmetic_expression",
+      "label": "Arithmetic Expression",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "ambiguous_grammar",
+      "label": "Ambiguous Grammar",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "unambiguous_grammar",
+      "label": "Unambiguous Grammar",
+      "category": "CONCEPT",
+      "confidence": 1.0,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "lex",
+      "label": "Lex",
+      "category": "TECHNOLOGY",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "yacc",
+      "label": "YACC",
+      "category": "TECHNOLOGY",
+      "confidence": 0.99,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "compiler",
+      "label": "Compiler",
+      "category": "TECHNOLOGY",
+      "confidence": 0.953,
+      "mention_count": 3,
+      "sentiment": null
+    },
+    {
+      "id": "parser",
+      "label": "Parser",
+      "category": "TECHNOLOGY",
+      "confidence": 0.91,
+      "mention_count": 3,
+      "sentiment": null
+    },
+    {
+      "id": "symbol_table",
+      "label": "Symbol Table",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "syntax_tree",
+      "label": "Syntax Tree",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "bison",
+      "label": "Bison",
+      "category": "TECHNOLOGY",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "flex",
+      "label": "Flex",
+      "category": "TECHNOLOGY",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "token",
+      "label": "Token",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "error_handling",
+      "label": "Error Handling",
+      "category": "CONCEPT",
+      "confidence": 0.88,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "grammar",
+      "label": "Grammar",
+      "category": "CONCEPT",
+      "confidence": 0.84,
+      "mention_count": 2,
+      "sentiment": null
+    },
+    {
+      "id": "lexical_analyzer",
+      "label": "Lexical Analyzer",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "syntax_analyzer",
+      "label": "Syntax Analyzer",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "lexer",
+      "label": "Lexer",
+      "category": "TECHNOLOGY",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "binary_number",
+      "label": "Binary Number",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "decimal_number",
+      "label": "Decimal Number",
+      "category": "CONCEPT",
+      "confidence": 0.77,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "conflict_resolution",
+      "label": "Conflict Resolution",
+      "category": "CONCEPT",
+      "confidence": 0.66,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "pattern_matching",
+      "label": "Pattern Matching",
+      "category": "CONCEPT",
+      "confidence": 0.66,
+      "mention_count": 1,
+      "sentiment": null
+    },
+    {
+      "id": "programming_language",
+      "label": "Programming Language",
+      "category": "TECHNOLOGY",
+      "confidence": 0.55,
+      "mention_count": 1,
+      "sentiment": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "lex",
+      "target": "lexical_analyzer",
+      "relation_type": "implements",
+      "label": "implements lexical analyzer",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "yacc",
+      "target": "syntax_analyzer",
+      "relation_type": "implements",
+      "label": "implements syntax analyzer",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "compiler",
+      "target": "lex",
+      "relation_type": "uses",
+      "label": "uses lex",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "compiler",
+      "target": "yacc",
+      "relation_type": "uses",
+      "label": "uses yacc",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "lexical_analyzer",
+      "target": "symbol_table",
+      "relation_type": "related_to",
+      "label": "related to symbol table",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "syntax_analyzer",
+      "target": "syntax_tree",
+      "relation_type": "produces",
+      "label": "produces syntax tree",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "yacc_program",
+      "target": "lex_program",
+      "relation_type": "uses",
+      "label": "uses lex program",
+      "confidence": 0.85,
+      "weight": 1.0
+    },
+    {
+      "source": "yacc_program",
+      "target": "arithmetic_expression",
+      "relation_type": "related_to",
+      "label": "parses arithmetic expressions",
+      "confidence": 0.85,
+      "weight": 0.85
+    },
+    {
+      "source": "ambiguous_grammar",
+      "target": "unambiguous_grammar",
+      "relation_type": "contrasts_with",
+      "label": "contrasts with unambiguous grammar",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "bison",
+      "target": "yacc_program",
+      "relation_type": "implements",
+      "label": "implements yacc program",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "flex",
+      "target": "lex_program",
+      "relation_type": "implements",
+      "label": "implements lex program",
+      "confidence": 0.8,
+      "weight": 0.8
+    },
+    {
+      "source": "arithmetic_expression",
+      "target": "ambiguous_grammar",
+      "relation_type": "related_to",
+      "label": "related to ambiguous grammar",
+      "confidence": 0.7,
+      "weight": 0.7
+    },
+    {
+      "source": "unambiguous_grammar",
+      "target": "arithmetic_expression",
+      "relation_type": "part_of",
+      "label": "part of arithmetic expression",
+      "confidence": 0.65,
+      "weight": 0.65
+    },
+    {
+      "source": "compiler",
+      "target": "parser",
+      "relation_type": "uses",
+      "label": "uses parser",
+      "confidence": 0.5,
+      "weight": 0.5
+    },
+    {
+      "source": "programming_language",
+      "target": "compiler",
+      "relation_type": "uses",
+      "label": "uses compiler",
+      "confidence": 0.45,
+      "weight": 0.45
+    },
+    {
+      "source": "yacc_program",
+      "target": "programming_language",
+      "relation_type": "part_of",
+      "label": "part of programming language",
+      "confidence": 0.5,
+      "weight": 0.5
+    }
+  ],
+  "tree": {
+    "id": "document_root",
+    "label": "Document",
+    "category": "ROOT",
+    "confidence": 1.0,
+    "mention_count": 24,
+    "sentiment": null,
+    "children": [
+      {
+        "id": "compiler",
+        "label": "Compiler",
+        "category": "TECHNOLOGY",
+        "confidence": 0.953,
+        "mention_count": 3,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "parser",
+        "label": "Parser",
+        "category": "TECHNOLOGY",
+        "confidence": 0.91,
+        "mention_count": 3,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "lex_program",
+        "label": "Lex Program",
+        "category": "TECHNOLOGY",
+        "confidence": 1.0,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "flex",
+            "label": "Flex",
+            "category": "TECHNOLOGY",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "arithmetic_expression",
+        "label": "Arithmetic Expression",
+        "category": "CONCEPT",
+        "confidence": 1.0,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "unambiguous_grammar",
+            "label": "Unambiguous Grammar",
+            "category": "CONCEPT",
+            "confidence": 1.0,
+            "mention_count": 2,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ambiguous_grammar",
+        "label": "Ambiguous Grammar",
+        "category": "CONCEPT",
+        "confidence": 1.0,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "grammar",
+        "label": "Grammar",
+        "category": "CONCEPT",
+        "confidence": 0.84,
+        "mention_count": 2,
+        "sentiment": null,
+        "children": []
+      },
+      {
+        "id": "cluster_technology",
+        "label": "Technology",
+        "category": "CLUSTER",
+        "confidence": 0.75,
+        "mention_count": 6,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "yacc_program",
+            "label": "YACC Program",
+            "category": "TECHNOLOGY",
+            "confidence": 1.0,
+            "mention_count": 2,
+            "sentiment": null,
+            "children": [
+              {
+                "id": "bison",
+                "label": "Bison",
+                "category": "TECHNOLOGY",
+                "confidence": 0.88,
+                "mention_count": 1,
+                "sentiment": null,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "lex",
+            "label": "Lex",
+            "category": "TECHNOLOGY",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "yacc",
+            "label": "YACC",
+            "category": "TECHNOLOGY",
+            "confidence": 0.99,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "bison",
+            "label": "Bison",
+            "category": "TECHNOLOGY",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "lexer",
+            "label": "Lexer",
+            "category": "TECHNOLOGY",
+            "confidence": 0.77,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "cluster_concept",
+        "label": "Concept",
+        "category": "CLUSTER",
+        "confidence": 0.75,
+        "mention_count": 10,
+        "sentiment": null,
+        "children": [
+          {
+            "id": "symbol_table",
+            "label": "Symbol Table",
+            "category": "CONCEPT",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "syntax_tree",
+            "label": "Syntax Tree",
+            "category": "CONCEPT",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "token",
+            "label": "Token",
+            "category": "CONCEPT",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "error_handling",
+            "label": "Error Handling",
+            "category": "CONCEPT",
+            "confidence": 0.88,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": []
+          },
+          {
+            "id": "lexical_analyzer",
+            "label": "Lexical Analyzer",
+            "category": "CONCEPT",
+            "confidence": 0.77,
+            "mention_count": 1,
+            "sentiment": null,
+            "children": [
+              {
+                "id": "lex",
+                "label": "Lex",
+                "category": "TECHNOLOGY",
+                "confidence": 0.99,
+                "mention_count": 1,
+                "sentiment": null,
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conflicts": [],
+  "global_summary": "The document provides a comprehensive guide to building a compiler using Lex and Yacc, covering the creation of lexical and syntax analyzers, and conflict resolution in grammars. It also delves into the specifics of writing Yacc programs to parse and validate arithmetic expressions, including handling ambiguous and unambiguous grammars. The use of Lex and Yacc together is emphasized, highlighting their role in creating parsers for programming languages, including parsing and evaluating arithmetic expressions and converting binary to decimal numbers. Overall, the document offers a detailed exploration of compiler construction and parsing techniques using Lex and Yacc. The information is geared towards understanding the fundamental concepts and applications of compilers and parsers in programming languages.",
+  "insights": {
+    "global_summary": "At its core, the document presents a comprehensive exploration of the process of building a compiler, with a specific focus on the utilization of Lex and Yacc in creating a functional compiler. The central argument revolves around the importance of understanding the intricacies of lexical analysis, syntax analysis, and conflict resolution in the development of a compiler. Key actors in this process include Lex, which generates a lexical analyzer, and Yacc, which produces a syntax analyzer, both of which play pivotal roles in parsing and evaluating arithmetic expressions. The document delves into the nuances of handling both ambiguous and unambiguous grammars, highlighting the complexities and challenges inherent in compiler design.\n\nAs the document progresses, it becomes evident that the sections are carefully crafted to build upon one another, creating a cohesive narrative that guides the reader through the complexities of compiler construction. The discussion on writing Yacc programs to validate and parse arithmetic expressions serves as a crucial bridge, connecting the foundational concepts of lexical and syntax analysis to the practical application of these principles in real-world scenarios. The interplay between Lex and Yacc is a recurring theme, underscoring the symbiotic relationship between these two tools in the creation of a parser. Furthermore, the document's exploration of the conversion of binary numbers to decimal numbers and the broader role of compilers and parsers in programming languages serves to contextualize the discussion, emphasizing the significance of these concepts within the larger landscape of computer science.\n\nUltimately, the document offers a rich and nuanced exploration of the compiler-building process, one that is replete with valuable insights and practical guidance. A key takeaway from this analysis is the importance of grasping the fundamental principles of compiler design, including the effective utilization of Lex and Yacc, in order to navigate the complexities of parsing and evaluating arithmetic expressions. Moreover, the document highlights the need for a deep understanding of the inter relationships between lexical analysis, syntax analysis, and conflict resolution, as well as the ability to apply these concepts in a practical context. By providing a detailed and comprehensive examination of these topics, the document serves as a valuable resource for individuals seeking to develop a profound understanding of compiler construction and its underlying principles.",
+    "themes": [
+      "Compiler",
+      "Parser",
+      "YACC Program",
+      "Lex Program",
+      "Arithmetic Expression",
+      "Ambiguous Grammar",
+      "Unambiguous Grammar",
+      "Grammar"
+    ],
+    "concept_descriptions": {
+      "compiler": "The compiler is the central focus of the document, with the process of building one being explored in detail, particularly using Lex and Yacc. It plays a crucial role in parsing and evaluating arithmetic expressions.",
+      "parser": "The parser is a key component in the compiler, responsible for analyzing the syntax of the input code, with both Lex and Yacc contributing to its functionality. It helps in breaking down the code into manageable parts for further analysis.",
+      "yacc_program": "A YACC program is utilized to produce a syntax analyzer, which is essential for parsing the syntax of the input code and resolving any conflicts that may arise. It works in conjunction with Lex to create a functional compiler.",
+      "lex_program": "A Lex program generates a lexical analyzer, which is vital for breaking down the input code into individual tokens that can be analyzed further. It is a crucial step in the compiler-building process, working in tandem with Yacc.",
+      "arithmetic_expression": "An arithmetic expression is a type of input code that the compiler is designed to parse and evaluate, consisting of numbers, operators, and variables. The document focuses on the compiler's ability to handle such expressions.",
+      "ambiguous_grammar": "Ambiguous grammar refers to a set of grammar rules that can lead to multiple possible interpretations of the same input code, causing conflicts in the parsing process. The document highlights the importance of resolving such ambiguities in compiler development.",
+      "unambiguous_grammar": "Unambiguous grammar is a set of rules that ensures a unique interpretation of the input code, which is essential for the compiler to function correctly. The document emphasizes the need for unambiguous grammar in compiler design.",
+      "grammar": "Grammar, in the context of this document, refers to the set of rules that define the structure of the input code, including the syntax and semantics. It is a fundamental concept in compiler development, as it determines how the compiler will interpret and analyze the code.",
+      "lex": "Lex is a tool used to generate a lexical analyzer, which is responsible for breaking down the input code into individual tokens. It is a crucial component in the compiler-building process, working in conjunction with Yacc.",
+      "yacc": "Yacc is a tool used to produce a syntax analyzer, which is essential for parsing the syntax of the input code and resolving any conflicts that may arise. It works in tandem with Lex to create a functional compiler.",
+      "symbol_table": "The symbol table is a data structure used by the compiler to store information about the variables, functions, and other symbols in the input code. It plays a crucial role in the compiler's ability to analyze and evaluate the code.",
+      "syntax_tree": "The syntax tree is a data structure used to represent the syntactic structure of the input code, with each node representing a construct in the code. It is a key concept in compiler development, as it helps in analyzing and evaluating the code.",
+      "bison": "Bison is not explicitly mentioned in the document as a key tool, but it is implied as a potential alternative to Yacc, used for generating syntax analyzers. Its role is similar to that of Yacc in the compiler-building process.",
+      "flex": "Flex is not explicitly mentioned in the document as a key tool, but it is implied as a potential alternative to Lex, used for generating lexical analyzers. Its role is similar to that of Lex in the compiler-building process.",
+      "token": "A token is a basic unit of the input code, such as a keyword, identifier, or symbol, which is generated by the lexical analyzer. It is a fundamental concept in compiler development, as the compiler analyzes and evaluates the code based on these tokens."
+    }
+  },
+  "total_chunks_processed": 4,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "agentic_metrics": {
+    "llm_usage": {
+      "groq": 3
+    },
+    "strategy_usage": {
+      "balanced": 3
+    },
+    "avg_react_iterations": 1.0,
+    "react_retry_count": 0,
+    "total_critic_filtered": 3,
+    "avg_processing_ms": 2710,
+    "fallback_rate_pct": 100.0,
+    "domain": "general",
+    "orchestrator_strategy": "balanced",
+    "orchestrator_decided_by": "unknown"
+  },
+  "stats": {
+    "total_agent_results": 4,
+    "failed_agent_results": 1,
+    "concepts_before_merge": 34,
+    "concepts_after_merge": 24,
+    "relationships_before_merge": 18,
+    "relationships_after_merge": 16,
+    "conflicts_detected": 0
+  },
+  "performance_metrics": {
+    "ingestion_start": null,
+    "graph_completion": "2026-04-27T06:43:22.603562",
+    "latency_seconds": 0,
+    "total_chunks": 4,
+    "processed_chunks": 4,
+    "chunk_coverage": 100.0,
+    "worker_nodes_est": "09e854ac4526"
+  }
+}

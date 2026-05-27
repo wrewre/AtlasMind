@@ -1,0 +1,5 @@
+pdfplumber==0.11.0
+redis[asyncio]==5.0.4
+structlog==24.1.0
+pydantic==2.7.1
+aiofiles==23.2.1

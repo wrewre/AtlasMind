@@ -1,0 +1,41 @@
+{
+  "document_id": "73daa112-f115-4974-a96f-770d91e79434",
+  "nodes": [],
+  "edges": [],
+  "tree": {
+    "id": "root",
+    "label": "Document",
+    "children": [],
+    "category": "ROOT"
+  },
+  "conflicts": [],
+  "global_summary": "",
+  "insights": {
+    "global_summary": "",
+    "themes": [],
+    "concept_descriptions": {}
+  },
+  "total_chunks_processed": 3,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "agentic_metrics": {
+    "llm_usage": {},
+    "strategy_usage": {},
+    "avg_react_iterations": 0.0,
+    "react_retry_count": 0,
+    "total_critic_filtered": 0,
+    "avg_processing_ms": 0,
+    "fallback_rate_pct": 0.0,
+    "domain": "general",
+    "orchestrator_strategy": "balanced",
+    "orchestrator_decided_by": "unknown"
+  },
+  "stats": {
+    "total_agent_results": 3,
+    "failed_agent_results": 3,
+    "concepts_before_merge": 0,
+    "concepts_after_merge": 0,
+    "relationships_before_merge": 0,
+    "relationships_after_merge": 0,
+    "conflicts_detected": 0
+  }
+}

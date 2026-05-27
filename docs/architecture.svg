@@ -1,0 +1,181 @@
+<svg viewBox="0 0 960 680" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <marker id="arrow" viewBox="0 -4 10 8" refX="9" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,-4L10,0L0,4" fill="#00e5ff" opacity="0.8"/>
+    </marker>
+    <marker id="arrow-fan" viewBox="0 -4 10 8" refX="9" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,-4L10,0L0,4" fill="#ffb300" opacity="0.8"/>
+    </marker>
+    <marker id="arrow-llm" viewBox="0 -4 10 8" refX="9" refY="0" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0,-4L10,0L0,4" fill="#00e676" opacity="0.7"/>
+    </marker>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0f"/><stop offset="100%" stop-color="#111118"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="680" fill="url(#bg)" rx="12"/>
+  <rect width="960" height="680" fill="none" stroke="#1e1e2c" stroke-width="1" rx="12"/>
+
+  <!-- Title -->
+  <text x="480" y="36" text-anchor="middle" fill="#f0f0f8" font-size="14" font-weight="bold" letter-spacing="2">DISTRIBUTED MULTI-AGENT MIND MAP SYSTEM</text>
+  <text x="480" y="54" text-anchor="middle" fill="#505068" font-size="9" letter-spacing="3">FREE-TIER LLM CASCADE · EVENT-DRIVEN · FAULT-TOLERANT · HORIZONTALLY SCALABLE</text>
+
+  <!-- ── LLM Cascade Box (right side) ───────────────────────────── -->
+  <rect x="740" y="68" width="200" height="178" rx="8" fill="#111118" stroke="#00e676" stroke-width="1.2" stroke-dasharray="5,3"/>
+  <text x="840" y="88"  text-anchor="middle" fill="#00e676" font-size="9" font-weight="bold" letter-spacing="1">FREE LLM CASCADE</text>
+  <text x="840" y="102" text-anchor="middle" fill="#505068" font-size="8">LangChain orchestration</text>
+
+  <!-- Gemini -->
+  <rect x="756" y="110" width="168" height="32" rx="5" fill="#1e1e2c" stroke="#4285f4" stroke-width="1"/>
+  <text x="840" y="124" text-anchor="middle" fill="#4285f4" font-size="9" font-weight="bold">1. Gemini 1.5 Flash</text>
+  <text x="840" y="136" text-anchor="middle" fill="#505068" font-size="8">15 RPM · 1.5M tok/day · FREE</text>
+
+  <text x="840" y="153" text-anchor="middle" fill="#505068" font-size="9">↓ 429 / fail</text>
+
+  <!-- Groq -->
+  <rect x="756" y="158" width="168" height="32" rx="5" fill="#1e1e2c" stroke="#f06292" stroke-width="1"/>
+  <text x="840" y="172" text-anchor="middle" fill="#f06292" font-size="9" font-weight="bold">2. Groq llama-3.3-70b</text>
+  <text x="840" y="184" text-anchor="middle" fill="#505068" font-size="8">30 RPM · 14K req/day · FREE</text>
+
+  <text x="840" y="201" text-anchor="middle" fill="#505068" font-size="9">↓ 429 / fail</text>
+
+  <!-- HuggingFace -->
+  <rect x="756" y="206" width="168" height="32" rx="5" fill="#1e1e2c" stroke="#ffb300" stroke-width="1"/>
+  <text x="840" y="220" text-anchor="middle" fill="#ffb300" font-size="9" font-weight="bold">3. HuggingFace zephyr-7b</text>
+  <text x="840" y="232" text-anchor="middle" fill="#505068" font-size="8">always free · slower fallback</text>
+
+  <!-- Cache badge -->
+  <rect x="756" y="246" width="168" height="0" rx="0" fill="none"/>
+  <text x="840" y="242" text-anchor="middle" fill="#00e5ff" font-size="8">+ prompt-hash cache · rate-window tracker</text>
+
+  <!-- ── Main pipeline (left / center) ──────────────────────────── -->
+
+  <!-- CLIENT -->
+  <rect x="270" y="70" width="260" height="42" rx="8" fill="#1e1e2c" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow)"/>
+  <text x="400" y="88" text-anchor="middle" fill="#00e5ff" font-size="10" font-weight="bold">BROWSER CLIENT</text>
+  <text x="400" y="103" text-anchor="middle" fill="#9090a8" font-size="8">React + D3.js · SSE · WebSocket</text>
+
+  <line x1="400" y1="112" x2="400" y2="132" stroke="#00e5ff" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.7"/>
+  <text x="410" y="125" fill="#505068" font-size="8">HTTP / SSE / WS</text>
+
+  <!-- API GATEWAY -->
+  <rect x="250" y="134" width="300" height="42" rx="8" fill="#1e1e2c" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="400" y="152" text-anchor="middle" fill="#7c3aed" font-size="10" font-weight="bold">API GATEWAY</text>
+  <text x="400" y="167" text-anchor="middle" fill="#9090a8" font-size="8">FastAPI · Upload · Status · Graph · :8000</text>
+
+  <line x1="400" y1="176" x2="400" y2="196" stroke="#00e5ff" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.7"/>
+  <text x="410" y="189" fill="#505068" font-size="8">Redis Stream: document.ingested</text>
+
+  <!-- INGESTION -->
+  <rect x="265" y="198" width="270" height="42" rx="8" fill="#1e1e2c" stroke="#00e5ff" stroke-width="1"/>
+  <text x="400" y="216" text-anchor="middle" fill="#00e5ff" font-size="10" font-weight="bold">DOCUMENT INGESTION</text>
+  <text x="400" y="231" text-anchor="middle" fill="#9090a8" font-size="8">PDF / TXT extraction · pdfplumber</text>
+
+  <line x1="400" y1="240" x2="400" y2="260" stroke="#00e5ff" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.7"/>
+  <text x="410" y="253" fill="#505068" font-size="8">Redis Stream: document.extracted</text>
+
+  <!-- CHUNKER -->
+  <rect x="265" y="262" width="270" height="42" rx="8" fill="#1e1e2c" stroke="#ffb300" stroke-width="1.5"/>
+  <text x="400" y="280" text-anchor="middle" fill="#ffb300" font-size="10" font-weight="bold">CHUNKING SERVICE</text>
+  <text x="400" y="295" text-anchor="middle" fill="#9090a8" font-size="8">Sentence-aware sliding window · overlap strategy</text>
+
+  <text x="400" y="318" text-anchor="middle" fill="#ffb300" font-size="8" font-style="italic">fan-out → N chunks × 4 agent consumer groups</text>
+  <text x="400" y="332" text-anchor="middle" fill="#505068" font-size="8">Redis Stream: chunks.ready</text>
+
+  <!-- Fan-out arrows -->
+  <line x1="318" y1="304" x2="88"  y2="366" stroke="#ffb300" stroke-width="1.2" marker-end="url(#arrow-fan)" opacity="0.6"/>
+  <line x1="368" y1="304" x2="248" y2="366" stroke="#ffb300" stroke-width="1.2" marker-end="url(#arrow-fan)" opacity="0.6"/>
+  <line x1="432" y1="304" x2="552" y2="366" stroke="#ffb300" stroke-width="1.2" marker-end="url(#arrow-fan)" opacity="0.6"/>
+  <line x1="482" y1="304" x2="712" y2="366" stroke="#ffb300" stroke-width="1.2" marker-end="url(#arrow-fan)" opacity="0.6"/>
+
+  <!-- ── 4 AGENTS ──────────────────────────────────────────────── -->
+
+  <!-- Concept Agent -->
+  <rect x="14" y="368" width="150" height="58" rx="8" fill="#1e1e2c" stroke="#00e5ff" stroke-width="1.2"/>
+  <text x="89"  y="386" text-anchor="middle" fill="#00e5ff" font-size="9" font-weight="bold">CONCEPT AGENT</text>
+  <text x="89"  y="399" text-anchor="middle" fill="#9090a8" font-size="8">Entities · Topics</text>
+  <text x="89"  y="411" text-anchor="middle" fill="#505068" font-size="8">× 2 replicas</text>
+  <text x="89"  y="421" text-anchor="middle" fill="#4285f4" font-size="7">Gemini primary</text>
+
+  <!-- Relationship Agent -->
+  <rect x="178" y="368" width="150" height="58" rx="8" fill="#1e1e2c" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="253" y="386" text-anchor="middle" fill="#7c3aed" font-size="9" font-weight="bold">RELATIONSHIP AGENT</text>
+  <text x="253" y="399" text-anchor="middle" fill="#9090a8" font-size="8">Semantic edges</text>
+  <text x="253" y="411" text-anchor="middle" fill="#505068" font-size="8">× 2 replicas</text>
+  <text x="253" y="421" text-anchor="middle" fill="#4285f4" font-size="7">Gemini / Groq</text>
+
+  <!-- Summarization Agent -->
+  <rect x="482" y="368" width="150" height="58" rx="8" fill="#1e1e2c" stroke="#00e676" stroke-width="1.2"/>
+  <text x="557" y="386" text-anchor="middle" fill="#00e676" font-size="9" font-weight="bold">SUMMARIZATION AGENT</text>
+  <text x="557" y="399" text-anchor="middle" fill="#9090a8" font-size="8">Chunk summaries</text>
+  <text x="557" y="411" text-anchor="middle" fill="#505068" font-size="8">× 1 replica</text>
+  <text x="557" y="421" text-anchor="middle" fill="#4285f4" font-size="7">Gemini primary</text>
+
+  <!-- Sentiment Agent -->
+  <rect x="646" y="368" width="150" height="58" rx="8" fill="#1e1e2c" stroke="#f06292" stroke-width="1.2"/>
+  <text x="721" y="386" text-anchor="middle" fill="#f06292" font-size="9" font-weight="bold">SENTIMENT AGENT</text>
+  <text x="721" y="399" text-anchor="middle" fill="#9090a8" font-size="8">Concept polarity</text>
+  <text x="721" y="411" text-anchor="middle" fill="#505068" font-size="8">× 1 replica</text>
+  <text x="721" y="421" text-anchor="middle" fill="#4285f4" font-size="7">Groq / HuggingFace</text>
+
+  <!-- LLM cascade arrows from agents -->
+  <line x1="164" y1="390" x2="738" y2="220" stroke="#00e676" stroke-width="0.8" stroke-dasharray="3,3" marker-end="url(#arrow-llm)" opacity="0.35"/>
+  <line x1="328" y1="390" x2="742" y2="220" stroke="#00e676" stroke-width="0.8" stroke-dasharray="3,3" marker-end="url(#arrow-llm)" opacity="0.3"/>
+  <line x1="632" y1="390" x2="744" y2="220" stroke="#00e676" stroke-width="0.8" stroke-dasharray="3,3" marker-end="url(#arrow-llm)" opacity="0.3"/>
+  <line x1="796" y1="426" x2="800" y2="248" stroke="#00e676" stroke-width="0.8" stroke-dasharray="3,3" marker-end="url(#arrow-llm)" opacity="0.3"/>
+
+  <!-- Converge to consensus -->
+  <line x1="89"  y1="426" x2="325" y2="478" stroke="#00e5ff" stroke-width="1.2" marker-end="url(#arrow)" opacity="0.5"/>
+  <line x1="253" y1="426" x2="365" y2="478" stroke="#7c3aed" stroke-width="1.2" marker-end="url(#arrow)" opacity="0.5"/>
+  <line x1="557" y1="426" x2="435" y2="478" stroke="#00e676" stroke-width="1.2" marker-end="url(#arrow)" opacity="0.5"/>
+  <line x1="721" y1="426" x2="475" y2="478" stroke="#f06292" stroke-width="1.2" marker-end="url(#arrow)" opacity="0.5"/>
+
+  <text x="400" y="462" text-anchor="middle" fill="#505068" font-size="8">Redis Stream: agent.results (all 4 types converge)</text>
+
+  <!-- CONSENSUS ENGINE -->
+  <rect x="180" y="480" width="440" height="56" rx="8" fill="#1e1e2c" stroke="#ffb300" stroke-width="2" filter="url(#glow)"/>
+  <text x="400" y="500" text-anchor="middle" fill="#ffb300" font-size="11" font-weight="bold">CONSENSUS ENGINE</text>
+  <text x="400" y="515" text-anchor="middle" fill="#9090a8" font-size="8">Weighted voting · confidence merging · conflict resolution</text>
+  <text x="400" y="528" text-anchor="middle" fill="#505068" font-size="8">Redis distributed lock · eventual consistency · DLQ routing</text>
+
+  <!-- Global summary uses LLM cascade too -->
+  <line x1="620" y1="508" x2="738" y2="340" stroke="#00e676" stroke-width="0.8" stroke-dasharray="3,3" marker-end="url(#arrow-llm)" opacity="0.3"/>
+  <text x="700" y="430" fill="#00e676" font-size="7" text-anchor="middle" transform="rotate(-55,700,430)">global summary synthesis</text>
+
+  <line x1="400" y1="536" x2="400" y2="556" stroke="#00e5ff" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.7"/>
+  <text x="410" y="549" fill="#505068" font-size="8">Redis Stream: graph.built</text>
+
+  <!-- GRAPH BUILDER -->
+  <rect x="265" y="558" width="270" height="42" rx="8" fill="#1e1e2c" stroke="#4fc3f7" stroke-width="1"/>
+  <text x="400" y="576" text-anchor="middle" fill="#4fc3f7" font-size="10" font-weight="bold">GRAPH BUILDER</text>
+  <text x="400" y="591" text-anchor="middle" fill="#9090a8" font-size="8">Neo4j MERGE · Redis JSON cache · JSON export</text>
+
+  <!-- Redis infra box -->
+  <rect x="14" y="490" width="150" height="70" rx="8" fill="#111118" stroke="#ff9800" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="89" y="510" text-anchor="middle" fill="#ff9800" font-size="9" font-weight="bold">REDIS</text>
+  <text x="89" y="524" text-anchor="middle" fill="#9090a8" font-size="8">Streams (queues)</text>
+  <text x="89" y="536" text-anchor="middle" fill="#9090a8" font-size="8">Pub/Sub (WS push)</text>
+  <text x="89" y="548" text-anchor="middle" fill="#9090a8" font-size="8">Key-Value (cache)</text>
+
+  <!-- Monitoring box -->
+  <rect x="796" y="490" width="148" height="70" rx="8" fill="#111118" stroke="#8888aa" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="870" y="510" text-anchor="middle" fill="#8888aa" font-size="9" font-weight="bold">MONITORING</text>
+  <text x="870" y="524" text-anchor="middle" fill="#9090a8" font-size="8">Prometheus</text>
+  <text x="870" y="536" text-anchor="middle" fill="#9090a8" font-size="8">Grafana :3001</text>
+  <text x="870" y="548" text-anchor="middle" fill="#505068" font-size="8">optional profile</text>
+
+  <!-- Legend -->
+  <rect x="14" y="640" width="930" height="28" rx="4" fill="#111118" stroke="#1e1e2c"/>
+  <circle cx="36"  cy="654" r="4" fill="#00e5ff"/><text x="45"  cy="654" y="658" fill="#9090a8" font-size="8">Core pipeline</text>
+  <circle cx="125" cy="654" r="4" fill="#ffb300"/><text x="134" cy="654" y="658" fill="#9090a8" font-size="8">Fan-out / consensus</text>
+  <circle cx="240" cy="654" r="4" fill="#00e676"/><text x="249" cy="654" y="658" fill="#9090a8" font-size="8">Free LLM calls (cascading)</text>
+  <circle cx="385" cy="654" r="4" fill="#ff9800"/><text x="394" cy="654" y="658" fill="#9090a8" font-size="8">Infrastructure</text>
+  <circle cx="460" cy="654" r="4" fill="#8888aa"/><text x="469" cy="654" y="658" fill="#9090a8" font-size="8">Optional</text>
+  <text x="570" y="658" fill="#505068" font-size="8">Dashed green lines = LLM API calls (Gemini→Groq→HuggingFace cascade)</text>
+</svg>

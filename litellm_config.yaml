@@ -1,0 +1,75 @@
+model_list:
+  # ── Primary Provider: NVIDIA NIM ─────────────────────────────────────────────
+  # Extremely high rate limits, thousands of free requests
+  - model_name: "extraction"
+    litellm_params:
+      model: "openai/meta/llama-3.1-70b-instruct"
+      api_base: "https://integrate.api.nvidia.com/v1"
+      api_key: "os.environ/NVIDIA_API_KEY"
+      rpm: 100
+      timeout: 45
+
+  - model_name: "fast-extraction"
+    litellm_params:
+      model: "openai/meta/llama-3.1-8b-instruct"
+      api_base: "https://integrate.api.nvidia.com/v1"
+      api_key: "os.environ/NVIDIA_API_KEY"
+      rpm: 100
+      timeout: 30
+
+  - model_name: "summary"
+    litellm_params:
+      model: "openai/meta/llama-3.1-70b-instruct"
+      api_base: "https://integrate.api.nvidia.com/v1"
+      api_key: "os.environ/NVIDIA_API_KEY"
+      rpm: 100
+      timeout: 45
+
+  # ── Fallback Provider: Google Gemini ─────────────────────────────────────────
+  - model_name: "extraction"
+    litellm_params:
+      model: "gemini/gemini-2.0-flash"
+      api_key: "os.environ/GEMINI_API_KEY"
+      rpm: 15
+      timeout: 60
+
+  - model_name: "fast-extraction"
+    litellm_params:
+      model: "gemini/gemini-2.0-flash"
+      api_key: "os.environ/GEMINI_API_KEY"
+      rpm: 15
+      timeout: 60
+
+  - model_name: "summary"
+    litellm_params:
+      model: "gemini/gemini-2.0-flash"
+      api_key: "os.environ/GEMINI_API_KEY"
+      rpm: 15
+      timeout: 60
+
+router_settings:
+  routing_strategy: "usage-based-routing-v2"
+  redis_host: "redis"
+  redis_port: 6379
+  # Fallbacks configured to seamlessly route NVIDIA -> Gemini if needed
+  fallbacks:
+    - {"extraction": ["gemini/gemini-2.0-flash"]}
+    - {"fast-extraction": ["gemini/gemini-2.0-flash"]}
+    - {"summary": ["gemini/gemini-2.0-flash"]}
+  num_retries: 3
+  retry_after: 5
+  allowed_fails: 2
+  cooldown_time: 30
+
+litellm_settings:
+  cache: true
+  cache_params:
+    type: "redis"
+    host: "redis"
+    port: 6379
+    ttl: 3600
+  drop_params: true
+  set_verbose: false
+
+general_settings:
+  master_key: "os.environ/LITELLM_MASTER_KEY"

@@ -1,0 +1,153 @@
+{
+  "document_id": "550e8400-e29b-41d4-a716-446655440000",
+  "nodes": [
+    {
+      "id": "machine_learning",
+      "label": "Machine Learning",
+      "category": "TECHNOLOGY",
+      "confidence": 0.97,
+      "mention_count": 8,
+      "sentiment": 0.45
+    },
+    {
+      "id": "neural_network",
+      "label": "Neural Network",
+      "category": "TECHNOLOGY",
+      "confidence": 0.94,
+      "mention_count": 5,
+      "sentiment": 0.30
+    },
+    {
+      "id": "deep_learning",
+      "label": "Deep Learning",
+      "category": "TECHNOLOGY",
+      "confidence": 0.92,
+      "mention_count": 4,
+      "sentiment": 0.40
+    },
+    {
+      "id": "artificial_intelligence",
+      "label": "Artificial Intelligence",
+      "category": "TECHNOLOGY",
+      "confidence": 0.95,
+      "mention_count": 7,
+      "sentiment": 0.35
+    },
+    {
+      "id": "natural_language_processing",
+      "label": "Natural Language Processing",
+      "category": "TECHNOLOGY",
+      "confidence": 0.90,
+      "mention_count": 4,
+      "sentiment": 0.50
+    },
+    {
+      "id": "transformer",
+      "label": "Transformer Architecture",
+      "category": "TECHNOLOGY",
+      "confidence": 0.88,
+      "mention_count": 3,
+      "sentiment": 0.60
+    },
+    {
+      "id": "reinforcement_learning",
+      "label": "Reinforcement Learning",
+      "category": "TECHNOLOGY",
+      "confidence": 0.87,
+      "mention_count": 3,
+      "sentiment": 0.45
+    },
+    {
+      "id": "training_data",
+      "label": "Training Data",
+      "category": "CONCEPT",
+      "confidence": 0.85,
+      "mention_count": 4,
+      "sentiment": 0.20
+    },
+    {
+      "id": "overfitting",
+      "label": "Overfitting",
+      "category": "CONCEPT",
+      "confidence": 0.82,
+      "mention_count": 2,
+      "sentiment": -0.40
+    },
+    {
+      "id": "transfer_learning",
+      "label": "Transfer Learning",
+      "category": "TECHNOLOGY",
+      "confidence": 0.80,
+      "mention_count": 2,
+      "sentiment": 0.55
+    }
+  ],
+  "edges": [
+    {
+      "source": "deep_learning",
+      "target": "machine_learning",
+      "relation_type": "is_a",
+      "label": "is a subset of",
+      "confidence": 0.95,
+      "weight": 0.95
+    },
+    {
+      "source": "machine_learning",
+      "target": "artificial_intelligence",
+      "relation_type": "is_a",
+      "label": "is a subfield of",
+      "confidence": 0.94,
+      "weight": 0.94
+    },
+    {
+      "source": "deep_learning",
+      "target": "neural_network",
+      "relation_type": "uses",
+      "label": "uses multilayer",
+      "confidence": 0.92,
+      "weight": 0.92
+    },
+    {
+      "source": "natural_language_processing",
+      "target": "transformer",
+      "relation_type": "uses",
+      "label": "powered by",
+      "confidence": 0.90,
+      "weight": 0.90
+    },
+    {
+      "source": "machine_learning",
+      "target": "training_data",
+      "relation_type": "requires",
+      "label": "requires quality",
+      "confidence": 0.88,
+      "weight": 0.88
+    },
+    {
+      "source": "overfitting",
+      "target": "training_data",
+      "relation_type": "causes",
+      "label": "caused by excess fit to",
+      "confidence": 0.82,
+      "weight": 0.82
+    },
+    {
+      "source": "transfer_learning",
+      "target": "training_data",
+      "relation_type": "enables",
+      "label": "reduces need for",
+      "confidence": 0.78,
+      "weight": 0.78
+    }
+  ],
+  "global_summary": "This document provides a comprehensive overview of machine learning and artificial intelligence, covering the progression from foundational ML concepts through deep learning and neural networks to specialized domains including NLP and reinforcement learning. It examines practical considerations around data quality, overfitting, and transfer learning, while also addressing the transformative industry impact across healthcare, finance, and transportation, and looking ahead to emerging directions such as federated learning, AutoML, and AI safety.",
+  "total_chunks_processed": 6,
+  "consensus_method": "weighted_voting_confidence_merging",
+  "stats": {
+    "total_agent_results": 24,
+    "concepts_before_merge": 87,
+    "concepts_after_merge": 22,
+    "relationships_before_merge": 54,
+    "relationships_after_merge": 12
+  }
+}
