@@ -389,6 +389,53 @@ async def test_agent_endpoint():
         }
 
 
+@app.get("/api/v1/debug/test-gemini")
+async def test_gemini_endpoint():
+    """Debug endpoint to test direct Gemini API call using GEMINI_API_KEY."""
+    import httpx
+    import os
+    key = os.getenv("GEMINI_API_KEY")
+    if not key:
+        return {"success": False, "error": "GEMINI_API_KEY environment variable is not set or empty"}
+        
+    masked_key = key[:6] + "..." + key[-4:] if len(key) > 10 else "too short"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={key}"
+    payload = {
+        "contents": [{"parts": [{"text": "Hello, respond with the word SUCCESS."}]}]
+    }
+    
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post(url, json=payload, headers={"Content-Type": "application/json"})
+            status_code = resp.status_code
+            body = resp.text
+            if status_code == 200:
+                return {
+                    "success": True,
+                    "status_code": status_code,
+                    "masked_key": masked_key,
+                    "length": len(key),
+                    "response": resp.json()
+                }
+            else:
+                return {
+                    "success": False,
+                    "status_code": status_code,
+                    "masked_key": masked_key,
+                    "length": len(key),
+                    "error_body": body
+                }
+    except Exception as exc:
+        import traceback
+        return {
+            "success": False,
+            "masked_key": masked_key,
+            "length": len(key),
+            "error": str(exc),
+            "traceback": traceback.format_exc()
+        }
+
+
 @app.get("/api/v1/documents/{document_id}/graph")
 async def get_graph(
     document_id: str,
