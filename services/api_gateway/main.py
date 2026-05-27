@@ -109,6 +109,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+import traceback
+
+@app.exception_handler(Exception)
+async def debug_exception_handler(request, exc):
+    if isinstance(exc, HTTPException):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={"detail": exc.detail}
+        )
+    tb = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+    log.error("unhandled_error", error=str(exc), traceback=tb)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": f"Unhandled error: {str(exc)}",
+            "traceback": tb
+        }
+    )
+
 # ---------------------------------------------------------------------------
 # WebSocket connection manager
 # ---------------------------------------------------------------------------
