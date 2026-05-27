@@ -335,6 +335,22 @@ async def get_job_status(document_id: str):
     return json.loads(raw)
 
 
+@app.get("/api/v1/debug/jobs")
+async def list_all_jobs():
+    """Debug endpoint to list all job states in Redis."""
+    jobs = []
+    cur = 0
+    while True:
+        cur, keys = await redis_client.scan(cur, match="job:state:*", count=100)
+        for key in keys:
+            raw = await redis_client.get(key)
+            if raw:
+                jobs.append(json.loads(raw))
+        if cur == 0:
+            break
+    return jobs
+
+
 @app.get("/api/v1/documents/{document_id}/graph")
 async def get_graph(
     document_id: str,
