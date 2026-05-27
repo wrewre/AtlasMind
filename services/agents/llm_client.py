@@ -54,11 +54,17 @@ if gemini_key:
         USE_DIRECT_GEMINI = True
 
 
+def _map_to_groq_model(model_tier: str) -> str:
+    if model_tier == _MODEL_FAST:
+        return "llama-3.1-8b-instant"
+    return "llama-3.3-70b-versatile"
+
+
 class LLMClient:
     """
     Thin wrapper around LiteLLM proxy.
     LiteLLM handles all provider routing, retries, rate limiting, and caching.
-    If LiteLLM is not available, it falls back to direct Gemini API calls.
+    If LiteLLM is not available, it cascades to direct Gemini and Groq API calls.
     """
 
     def __init__(self):
@@ -112,6 +118,55 @@ class LLMClient:
             log.error("gemini_direct_parse_error", response=data)
             raise RuntimeError("Failed to parse direct Gemini API response")
 
+    async def _complete_groq_direct(
+        self,
+        system: str,
+        user: str,
+        max_tokens: int,
+        model: str,
+    ) -> Tuple[str, str]:
+        """Call Groq API directly using round-robin rotation over configured keys."""
+        keys = [
+            os.getenv("GROQ_API_KEY"),
+            os.getenv("GROQ_API_KEY_2"),
+            os.getenv("GROQ_API_KEY_3"),
+            os.getenv("GROQ_API_KEY_4"),
+        ]
+        active_keys = [k for k in keys if k]
+        if not active_keys:
+            raise RuntimeError("No GROQ_API_KEY is configured")
+
+        last_exc = None
+        for key in active_keys:
+            try:
+                resp = await self._http.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {key}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": system},
+                            {"role": "user",   "content": user},
+                        ],
+                        "max_tokens": max_tokens,
+                        "temperature": 0.1,
+                    },
+                    timeout=30.0,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                text = data["choices"][0]["message"]["content"]
+                return text, f"groq/{model} (direct)"
+            except Exception as exc:
+                last_exc = exc
+                log.warning("groq_key_failed_trying_next", error=str(exc))
+                continue
+                
+        raise RuntimeError(f"All Groq keys failed: {last_exc}")
+
     async def complete(
         self,
         system: str,
@@ -121,17 +176,25 @@ class LLMClient:
         summary: bool = False,
     ) -> Tuple[str, str]:
         """
-        Send a completion request to LiteLLM proxy.
-        If the proxy is not running or fails, falls back to direct Gemini API.
+        Send a completion request. Cascades through:
+        1. Direct Gemini (if preferred/Railway)
+        2. Direct Groq (if Gemini fails/Railway)
+        3. LiteLLM proxy (standard/local fallback)
         """
-        model = _pick_model(user, force_fast=force_fast, summary=summary)
+        model_tier = _pick_model(user, force_fast=force_fast, summary=summary)
 
         # Direct call if detected (e.g. on Railway free tier)
         if USE_DIRECT_GEMINI:
             try:
                 return await self._complete_gemini_direct(system, user, max_tokens)
             except Exception as exc:
-                log.warning("direct_gemini_failed_trying_litellm", error=str(exc))
+                log.warning("direct_gemini_failed_trying_groq", error=str(exc))
+                if os.getenv("GROQ_API_KEY"):
+                    try:
+                        groq_model = _map_to_groq_model(model_tier)
+                        return await self._complete_groq_direct(system, user, max_tokens, groq_model)
+                    except Exception as g_exc:
+                        log.warning("direct_groq_failed_trying_litellm", error=str(g_exc))
 
         try:
             resp = await self._http.post(
@@ -141,7 +204,7 @@ class LLMClient:
                     "Content-Type": "application/json",
                 },
                 json={
-                    "model": model,
+                    "model": model_tier,
                     "messages": [
                         {"role": "system", "content": system},
                         {"role": "user",   "content": user},
@@ -153,28 +216,36 @@ class LLMClient:
             resp.raise_for_status()
             data     = resp.json()
             text     = data["choices"][0]["message"]["content"]
-            provider = data.get("model", model)
-            log.info("llm_success", model=model, provider=provider)
+            provider = data.get("model", model_tier)
+            log.info("llm_success", model=model_tier, provider=provider)
             return text, provider
 
         except (httpx.ConnectError, httpx.ConnectTimeout, httpx.HTTPStatusError, RuntimeError) as exc:
-            # Automatic fallback to direct Gemini if LiteLLM proxy connection failed
+            # Fallback path if LiteLLM connection failed/unreachable
             if os.getenv("GEMINI_API_KEY") and not USE_DIRECT_GEMINI:
                 log.info("litellm_failed_falling_back_to_direct_gemini", error=str(exc))
                 try:
                     return await self._complete_gemini_direct(system, user, max_tokens)
                 except Exception as g_exc:
-                    raise RuntimeError(f"Direct Gemini fallback failed: {g_exc}") from exc
+                    log.warning("direct_gemini_fallback_failed_trying_groq", error=str(g_exc))
             
-            # Re-raise or format error if fallback not available
+            if os.getenv("GROQ_API_KEY"):
+                log.info("trying_direct_groq_fallback")
+                try:
+                    groq_model = _map_to_groq_model(model_tier)
+                    return await self._complete_groq_direct(system, user, max_tokens, groq_model)
+                except Exception as gr_exc:
+                    log.error("direct_groq_fallback_failed", error=str(gr_exc))
+            
+            # Re-raise original error if no fallback worked
             if isinstance(exc, httpx.HTTPStatusError):
                 body = exc.response.text[:300]
                 log.error("litellm_http_error", status=exc.response.status_code, body=body)
                 raise RuntimeError(f"LiteLLM {exc.response.status_code}: {body}") from exc
             raise RuntimeError(f"LiteLLM call failed: {exc}") from exc
         except httpx.TimeoutException:
-            log.error("litellm_timeout", model=model)
-            raise RuntimeError(f"LiteLLM timeout for model '{model}'")
+            log.error("litellm_timeout", model=model_tier)
+            raise RuntimeError(f"LiteLLM timeout for model '{model_tier}'")
 
     async def complete_json(
         self,

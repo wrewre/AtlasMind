@@ -291,14 +291,15 @@ def detect_conflicts(edges: List[Dict]) -> List[Dict]:
 # ── Global summary synthesis ──────────────────────────────────────────────────
 
 async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: float = 0.1) -> str:
-    """Call LLM, trying LiteLLM first, falling back to direct Gemini API call if it fails/is bypassed."""
+    """Call LLM, trying LiteLLM first, falling back to Gemini, and then Groq direct if they fail."""
     gemini_key = os.getenv("GEMINI_API_KEY")
-    use_direct_gemini = False
-    if gemini_key:
+    groq_key = os.getenv("GROQ_API_KEY")
+    use_direct_fallback = False
+    if gemini_key or groq_key:
         if os.getenv("LITELLM_URL") is None or "litellm:4000" in LITELLM_URL:
-            use_direct_gemini = True
+            use_direct_fallback = True
 
-    if not use_direct_gemini:
+    if not use_direct_fallback:
         # Try LiteLLM proxy
         try:
             async with httpx.AsyncClient(timeout=45.0) as http:
@@ -320,38 +321,58 @@ async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: f
         except Exception as exc:
             log.warning("litellm_call_failed", error=str(exc))
 
-    # Fallback to direct Gemini call
+    # Fallback 1: Try direct Gemini call
     if gemini_key:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
-        payload = {
-            "contents": [
-                {
-                    "role": "user",
-                    "parts": [{"text": user}]
-                }
-            ],
-            "generationConfig": {
-                "temperature": temperature,
-                "maxOutputTokens": max_tokens
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
+            payload = {
+                "contents": [{"role": "user", "parts": [{"text": user}]}],
+                "generationConfig": {"temperature": temperature, "maxOutputTokens": max_tokens}
             }
-        }
-        if system:
-            payload["systemInstruction"] = {
-                "parts": [{"text": system}]
-            }
-        
-        async with httpx.AsyncClient(timeout=60.0) as http:
-            resp = await http.post(
-                url,
-                headers={"Content-Type": "application/json"},
-                json=payload
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            try:
+            if system:
+                payload["systemInstruction"] = {"parts": [{"text": system}]}
+            
+            async with httpx.AsyncClient(timeout=60.0) as http:
+                resp = await http.post(url, headers={"Content-Type": "application/json"}, json=payload)
+                resp.raise_for_status()
+                data = resp.json()
                 return data["candidates"][0]["content"]["parts"][0]["text"].strip()
-            except (KeyError, IndexError):
-                raise RuntimeError("Failed to parse direct Gemini API response")
+        except Exception as exc:
+            log.warning("gemini_direct_failed_trying_groq", error=str(exc))
+
+    # Fallback 2: Try direct Groq call
+    if groq_key:
+        keys = [
+            os.getenv("GROQ_API_KEY"),
+            os.getenv("GROQ_API_KEY_2"),
+            os.getenv("GROQ_API_KEY_3"),
+            os.getenv("GROQ_API_KEY_4"),
+        ]
+        active_keys = [k for k in keys if k]
+        for key in active_keys:
+            try:
+                async with httpx.AsyncClient(timeout=45.0) as http:
+                    resp = await http.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers={
+                            "Authorization": f"Bearer {key}",
+                            "Content-Type": "application/json",
+                        },
+                        json={
+                            "model": "llama-3.3-70b-versatile",
+                            "messages": [
+                                {"role": "system", "content": system},
+                                {"role": "user",   "content": user}
+                            ],
+                            "max_tokens": max_tokens,
+                            "temperature": temperature,
+                        },
+                    )
+                    if resp.status_code == 200:
+                        return resp.json()["choices"][0]["message"]["content"].strip()
+            except Exception as exc:
+                log.warning("groq_key_failed_trying_next", error=str(exc))
+                continue
 
     raise RuntimeError("All LLM providers failed")
 
