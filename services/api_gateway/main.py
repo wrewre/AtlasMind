@@ -74,8 +74,25 @@ async def lifespan(app: FastAPI):
     redis_client = aioredis.from_url(REDIS_URL, decode_responses=True)
     await init_db()
     log.info("api_gateway_started", redis=REDIS_URL)
+
+    # ── Launch all microservice workers inside this process ─────────────────
+    worker_tasks = []
+    try:
+        from workers import start_all_workers
+        worker_tasks = await start_all_workers()
+        log.info("monolith_workers_started", count=len(worker_tasks))
+    except Exception as exc:
+        log.error("worker_launch_failed", error=str(exc))
+
     yield
+
+    # ── Graceful shutdown ────────────────────────────────────────────────────
+    for t in worker_tasks:
+        t.cancel()
+    if worker_tasks:
+        await asyncio.gather(*worker_tasks, return_exceptions=True)
     await redis_client.aclose()
+
 
 
 app = FastAPI(
