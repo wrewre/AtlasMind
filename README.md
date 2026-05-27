@@ -67,181 +67,35 @@ The application is broken down into several Dockerized microservices communicati
 |
  Concept 
 |
- Implementation 
-|
-|
----
-|
----
-|
-|
-**
-Event-driven architecture
-**
-|
- Redis Streams as durable message queues between every service 
-|
-|
-**
-Fan-out parallelism
-**
-|
- One document chunk published once → consumed independently by 4 agent consumer groups 
-|
+| Concept | Implementation |
+| --- | --- |
+| **Event-driven architecture** | Redis Streams as durable message queues between every service |
+| **Fan-out parallelism** | One document chunk published once → consumed independently by 4 agent consumer groups |
 | **Consumer groups** | All unified agents share a single consumer group; multiple replicas compete for messages (work-queue pattern) |
-|
-**
-At-least-once delivery
-**
-|
- Messages only ACKed after successful processing; unACKed messages auto-reassigned on crash 
-|
-|
-**
-Dead Letter Queue
-**
-|
- After MAX_RETRIES exhausted, messages routed to 
-`dead.letter.queue`
- stream 
-|
-|
-**
-Distributed locking
-**
-|
- Redis 
-`SET NX EX`
- prevents duplicate consensus runs for the same document 
-|
-|
-**
-Eventual consistency
-**
-|
- Consensus engine waits for all agent results before merging; partial results tolerated 
-|
+| **At-least-once delivery** | Messages only ACKed after successful processing; unACKed messages auto-reassigned on crash |
+| **Dead Letter Queue** | After MAX_RETRIES exhausted, messages routed to `dead.letter.queue` stream |
+| **Distributed locking** | Redis `SET NX EX` prevents duplicate consensus runs for the same document |
+| **Eventual consistency** | Consensus engine waits for all agent results before merging; partial results tolerated |
 | **Horizontal scalability** | Unified agents independently scalable: `docker compose up --scale unified-agent=4` |
-|
-**
-Fault tolerance
-**
-|
- Exponential back-off retry on every agent; services restart automatically 
-|
-|
-**
-Real-time streaming
-**
-|
- SSE + WebSocket for live progress updates without polling overhead 
-|
-|
-**
-Idempotent operations
-**
-|
- Neo4j uses MERGE (not CREATE) — safe to reprocess same document 
-|
-|
-**
-Structured logging
-**
-|
- JSON logs from every service — ready for ELK/Loki aggregation 
-|
+| **Fault tolerance** | Exponential back-off retry on every agent; services restart automatically |
+| **Real-time streaming** | SSE + WebSocket for live progress updates without polling overhead |
+| **Idempotent operations** | Neo4j uses MERGE (not CREATE) — safe to reprocess same document |
+| **Structured logging** | JSON logs from every service — ready for ELK/Loki aggregation |
 ---
 ## Technology Stack
-|
- Layer 
-|
- Technology 
-|
- Rationale 
-|
-|
----
-|
----
-|
----
-|
+| Layer | Technology | Rationale |
+| --- | --- | --- |
 | **Primary LLM** | **NVIDIA NIM (Llama 3.1)** | Massive free credits, enterprise throughput |
 | **Fallback LLM** | **Google Gemini 2.0 Flash** | Generous free tier, excellent fallback reasoning |
 | **LLM Gateway** | **LiteLLM Proxy** | Smart routing, rate-limit handling, Redis caching |
-|
- Message Queue 
-|
-**
-Redis Streams
-**
-|
- Lighter than Kafka, built-in consumer groups 
-|
-|
- API Framework 
-|
-**
-FastAPI
-**
-|
- Async-native, auto-generated OpenAPI docs 
-|
-|
- Graph Storage 
-|
-**
-Neo4j
-**
- (optional) 
-|
- Purpose-built for knowledge graphs 
-|
-|
- Graph Cache 
-|
-**
-Redis
-**
-|
- Sub-millisecond graph retrieval 
-|
-|
- Frontend 
-|
-**
-React + D3.js
-**
-|
- D3 force simulation = best-in-class graph viz 
-|
-|
- State Management 
-|
-**
-Zustand
-**
-|
- Minimal, hooks-based 
-|
-|
- Containerization 
-|
-**
-Docker Compose
-**
-|
- Single-command deployment 
-|
-|
- Monitoring 
-|
-**
-Prometheus + Grafana
-**
-|
- Optional profile 
-|
+| Message Queue | **Redis Streams** | Lighter than Kafka, built-in consumer groups |
+| API Framework | **FastAPI** | Async-native, auto-generated OpenAPI docs |
+| Graph Storage | **Neo4j** (optional) | Purpose-built for knowledge graphs |
+| Graph Cache | **Redis** | Sub-millisecond graph retrieval |
+| Frontend | **React + D3.js** | D3 force simulation = best-in-class graph viz |
+| State Management | **Zustand** | Minimal, hooks-based |
+| Containerization | **Docker Compose** | Single-command deployment |
+| Monitoring | **Prometheus + Grafana** | Optional profile |
 ### Free Tier Limits
 | Provider | Models | Rate Limit | Key Required |
 | --- | --- | --- | --- |
@@ -396,73 +250,19 @@ http://localhost:3000
 ---
 ## Detailed Setup
 ### Environment Variables
-|
- Variable 
-|
- Default 
-|
- Description 
-|
-|
----
-|
----
-|
----
-|
+| Variable | Default | Description |
+| --- | --- | --- |
 | `NVIDIA_API_KEY` | **required** | NVIDIA NIM API key (primary LLM) |
 | `GEMINI_API_KEY` | **required** | Google Gemini API key (fallback LLM) |
 | `LITELLM_MASTER_KEY` | `sk-mindmap-master-key-2025` | LiteLLM Proxy security token |
 | `JWT_SECRET` | `change-me-in-production...` | Secret key for JWT auth encryption |
-|
-`CHUNK_SIZE`
-|
-`1500`
-|
- Characters per chunk 
-|
-|
-`CHUNK_OVERLAP`
-|
-`200`
-|
- Overlap between consecutive chunks 
-|
-|
-`VOTE_THRESHOLD`
-|
-`1`
-|
- Min agent mentions for concept acceptance 
-|
-|
-`CONF_THRESHOLD`
-|
-`0.45`
-|
- Min confidence score for concept acceptance 
-|
-|
-`EDGE_CONF_THRESHOLD`
-|
-`0.4`
-|
- Min confidence for relationship acceptance 
-|
-|
-`MAX_RETRIES`
-|
-`3`
-|
- Agent retry attempts before DLQ 
-|
-|
-`NEO4J_ENABLED`
-|
-`false`
-|
- Enable Neo4j persistence 
-|
+| `CHUNK_SIZE` | `1500` | Characters per chunk |
+| `CHUNK_OVERLAP` | `200` | Overlap between consecutive chunks |
+| `VOTE_THRESHOLD` | `1` | Min agent mentions for concept acceptance |
+| `CONF_THRESHOLD` | `0.45` | Min confidence score for concept acceptance |
+| `EDGE_CONF_THRESHOLD` | `0.4` | Min confidence for relationship acceptance |
+| `MAX_RETRIES` | `3` | Agent retry attempts before DLQ |
+| `NEO4J_ENABLED` | `false` | Enable Neo4j persistence |
 ### Enterprise LiteLLM Gateway
 All LLM requests flow through a central LiteLLM Proxy container, providing intelligent routing:
 ```
@@ -617,66 +417,18 @@ Fallback: concatenate first 3 chunk summaries on LLM error
 }
 ```
 ### Relationship Types
-|
- Type 
-|
- Meaning 
-|
-|
----
-|
----
-|
-|
-`is_a`
-|
- Taxonomy / classification 
-|
-|
-`part_of`
-|
- Composition / containment 
-|
-|
-`causes`
-|
- Causal relationship 
-|
-|
-`enables`
-|
- X makes Y possible 
-|
-|
-`requires`
-|
- Dependency 
-|
-|
-`uses`
-|
- Operational / applied 
-|
-|
-`implements`
-|
- Realization 
-|
-|
-`related_to`
-|
- General co-occurrence 
-|
-|
-`contrasts_with`
-|
- Opposition / alternative 
-|
-|
-`produces`
-|
- Output / result 
-|
+| Type | Meaning |
+| --- | --- |
+| `is_a` | Taxonomy / classification |
+| `part_of` | Composition / containment |
+| `causes` | Causal relationship |
+| `enables` | X makes Y possible |
+| `requires` | Dependency |
+| `uses` | Operational / applied |
+| `implements` | Realization |
+| `related_to` | General co-occurrence |
+| `contrasts_with` | Opposition / alternative |
+| `produces` | Output / result |
 ---
 ## Running Tests
 ```bash
@@ -707,100 +459,20 @@ docker exec -it $(docker ps -q -f name=redis) redis-cli get "job:state:<document
 ```
 ---
 ## Frontend Features
-|
- Feature 
-|
- Implementation 
-|
-|
----
-|
----
-|
-|
-**
-Drag & drop upload
-**
-|
- react-dropzone with file type validation 
-|
-|
-**
-Live pipeline progress
-**
-|
- SSE stream → progress ring + stage indicator 
-|
-|
-**
-Force-directed graph
-**
-|
- D3.js simulation with configurable forces 
-|
-|
-**
-Zoom & pan
-**
-|
- D3 zoom behavior, min 0.1×, max 4× 
-|
-|
-**
-Node hover
-**
-|
- Highlights connected nodes, dims unrelated 
-|
-|
-**
-Click for detail
-**
-|
- Sidebar panel with confidence, sentiment, relationships 
-|
-|
-**
-Category filter
-**
-|
- Chips to filter visible node categories 
-|
-|
-**
-Search
-**
-|
- Dims non-matching nodes in real time 
-|
-|
-**
-Sentiment rings
-**
-|
- Dashed rings on nodes: green=positive, red=negative 
-|
-|
-**
-Confidence badges
-**
-|
- Percentage displayed inside each node 
-|
-|
-**
-Relationship arrows
-**
-|
- Color-coded arrowhead markers per relation type 
-|
-|
-**
-Edge labels
-**
-|
- Displayed for high-confidence (>0.65) relationships 
-|
+| Feature | Implementation |
+| --- | --- |
+| **Drag & drop upload** | react-dropzone with file type validation |
+| **Live pipeline progress** | SSE stream → progress ring + stage indicator |
+| **Force-directed graph** | D3.js simulation with configurable forces |
+| **Zoom & pan** | D3 zoom behavior, min 0.1×, max 4× |
+| **Node hover** | Highlights connected nodes, dims unrelated |
+| **Click for detail** | Sidebar panel with confidence, sentiment, relationships |
+| **Category filter** | Chips to filter visible node categories |
+| **Search** | Dims non-matching nodes in real time |
+| **Sentiment rings** | Dashed rings on nodes: green=positive, red=negative |
+| **Confidence badges** | Percentage displayed inside each node |
+| **Relationship arrows** | Color-coded arrowhead markers per relation type |
+| **Edge labels** | Displayed for high-confidence (>0.65) relationships |
 ---
 ## Extending the System
 ### Adding a New Agent
