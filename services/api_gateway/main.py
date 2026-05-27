@@ -351,6 +351,44 @@ async def list_all_jobs():
     return jobs
 
 
+@app.get("/api/v1/debug/test-agent")
+async def test_agent_endpoint():
+    """Debug endpoint to test importing and running UnifiedAgent."""
+    import sys
+    import os
+    try:
+        # Replicate workers.py path modifications
+        services_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if services_dir not in sys.path:
+            sys.path.insert(0, services_dir)
+        agents_dir = os.path.join(services_dir, "agents")
+        if agents_dir not in sys.path:
+            sys.path.insert(0, agents_dir)
+            
+        from agents.unified_agent.main import UnifiedAgent
+        agent = UnifiedAgent()
+        
+        # Test processing a dummy chunk
+        result = await agent.process_chunk({
+            "chunk_id": "test-chunk-id",
+            "document_id": "test-doc-id",
+            "chunk_index": 0,
+            "total_chunks": 1,
+            "text": "The solar system consists of the Sun and the objects that orbit it, including eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune."
+        })
+        return {
+            "success": True,
+            "result": result
+        }
+    except Exception as exc:
+        import traceback
+        return {
+            "success": False,
+            "error": str(exc),
+            "traceback": traceback.format_exc()
+        }
+
+
 @app.get("/api/v1/documents/{document_id}/graph")
 async def get_graph(
     document_id: str,
