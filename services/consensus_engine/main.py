@@ -290,6 +290,72 @@ def detect_conflicts(edges: List[Dict]) -> List[Dict]:
 
 # ── Global summary synthesis ──────────────────────────────────────────────────
 
+async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: float = 0.1) -> str:
+    """Call LLM, trying LiteLLM first, falling back to direct Gemini API call if it fails/is bypassed."""
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    use_direct_gemini = False
+    if gemini_key:
+        if os.getenv("LITELLM_URL") is None or "litellm:4000" in LITELLM_URL:
+            use_direct_gemini = True
+
+    if not use_direct_gemini:
+        # Try LiteLLM proxy
+        try:
+            async with httpx.AsyncClient(timeout=45.0) as http:
+                resp = await http.post(
+                    f"{LITELLM_URL}/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {LITELLM_KEY}"},
+                    json={
+                        "model": "summary",
+                        "messages": [
+                            {"role": "system", "content": system},
+                            {"role": "user",   "content": user}
+                        ],
+                        "max_tokens": max_tokens,
+                        "temperature": temperature,
+                    },
+                )
+                if resp.status_code == 200:
+                    return resp.json()["choices"][0]["message"]["content"].strip()
+        except Exception as exc:
+            log.warning("litellm_call_failed", error=str(exc))
+
+    # Fallback to direct Gemini call
+    if gemini_key:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": user}]
+                }
+            ],
+            "generationConfig": {
+                "temperature": temperature,
+                "maxOutputTokens": max_tokens
+            }
+        }
+        if system:
+            payload["systemInstruction"] = {
+                "parts": [{"text": system}]
+            }
+        
+        async with httpx.AsyncClient(timeout=60.0) as http:
+            resp = await http.post(
+                url,
+                headers={"Content-Type": "application/json"},
+                json=payload
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            try:
+                return data["candidates"][0]["content"]["parts"][0]["text"].strip()
+            except (KeyError, IndexError):
+                raise RuntimeError("Failed to parse direct Gemini API response")
+
+    raise RuntimeError("All LLM providers failed")
+
+
 async def synthesize_global_summary(chunk_summaries: List[Tuple[int, str]]) -> str:
     if not chunk_summaries:
         return ""
@@ -301,21 +367,10 @@ async def synthesize_global_summary(chunk_summaries: List[Tuple[int, str]]) -> s
     system = "Synthesise section summaries into a coherent overall document summary. Write 3-5 sentences."
     user   = f"Synthesise these section summaries:\n\n{combined}"
 
-    async with httpx.AsyncClient(timeout=45.0) as http:
-        try:
-            resp = await http.post(
-                f"{LITELLM_URL}/v1/chat/completions",
-                headers={"Authorization": f"Bearer {LITELLM_KEY}"},
-                json={
-                    "model": "summary",
-                    "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-                    "max_tokens": 400, "temperature": 0.1,
-                },
-            )
-            if resp.status_code == 200:
-                return resp.json()["choices"][0]["message"]["content"].strip()
-        except Exception as exc:
-            log.warning("global_summary_failed", error=str(exc))
+    try:
+        return await call_llm(system, user, max_tokens=400, temperature=0.1)
+    except Exception as exc:
+        log.warning("global_summary_failed", error=str(exc))
 
     return " ".join(s for _, s in ordered[:3])
 
@@ -333,9 +388,7 @@ async def synthesize_rag_insights(
       2. Key themes  — extracted from top concepts, NO extra LLM call
       3. Per-concept descriptions — top 15 concepts batched into 1 LLM call
 
-    API selected by availability/quota, not by suitability:
-    Gemini first → Groq if Gemini fails/rate-limited → raw text fallback.
-    This mirrors the exact same pattern as synthesize_global_summary().
+    Uses the call_llm helper for automatic direct Gemini fallback.
     """
     if not chunk_summaries:
         return {"global_summary": global_summary, "themes": [], "concept_descriptions": {}}
@@ -359,24 +412,10 @@ async def synthesize_rag_insights(
     narrative_user = f"Analyse these section summaries and write a deep document overview:\n\n{combined}"
     narrative = ""
 
-    async with httpx.AsyncClient(timeout=45.0) as http:
-        try:
-            resp = await http.post(
-                f"{LITELLM_URL}/v1/chat/completions",
-                headers={"Authorization": f"Bearer {LITELLM_KEY}"},
-                json={
-                    "model": "summary",
-                    "messages": [
-                        {"role": "system", "content": narrative_system},
-                        {"role": "user",   "content": narrative_user},
-                    ],
-                    "max_tokens": 800, "temperature": 0.2,
-                },
-            )
-            if resp.status_code == 200:
-                narrative = resp.json()["choices"][0]["message"]["content"].strip()
-        except Exception as exc:
-            log.warning("insights_narrative_failed", error=str(exc))
+    try:
+        narrative = await call_llm(narrative_system, narrative_user, max_tokens=800, temperature=0.2)
+    except Exception as exc:
+        log.warning("insights_narrative_failed", error=str(exc))
 
     # Fallback: use the existing short global summary
     if not narrative:
@@ -412,24 +451,10 @@ async def synthesize_rag_insights(
         )
 
         raw_json = ""
-        async with httpx.AsyncClient(timeout=45.0) as http:
-            try:
-                resp = await http.post(
-                    f"{LITELLM_URL}/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {LITELLM_KEY}"},
-                    json={
-                        "model": "summary",
-                        "messages": [
-                            {"role": "system", "content": concepts_system},
-                            {"role": "user",   "content": concepts_user},
-                        ],
-                        "max_tokens": 1200, "temperature": 0.1,
-                    },
-                )
-                if resp.status_code == 200:
-                    raw_json = resp.json()["choices"][0]["message"]["content"].strip()
-            except Exception as exc:
-                log.warning("insights_concepts_failed", error=str(exc))
+        try:
+            raw_json = await call_llm(concepts_system, concepts_user, max_tokens=1200, temperature=0.1)
+        except Exception as exc:
+            log.warning("insights_concepts_failed", error=str(exc))
 
         if raw_json:
             clean = re.sub(r"^```(?:json)?\s*", "", raw_json.strip())

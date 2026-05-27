@@ -45,11 +45,20 @@ def _pick_model(text: str, force_fast: bool = False, summary: bool = False) -> s
     return _MODEL_EXTRACTION
 
 
+# Detect if we should use direct Gemini fallback
+USE_DIRECT_GEMINI = False
+gemini_key = os.getenv("GEMINI_API_KEY")
+if gemini_key:
+    # On Railway, we don't have LiteLLM container running, so bypass to avoid 10s timeouts
+    if os.getenv("LITELLM_URL") is None or "litellm:4000" in LITELLM_URL:
+        USE_DIRECT_GEMINI = True
+
+
 class LLMClient:
     """
     Thin wrapper around LiteLLM proxy.
-    All routing, retries, rate limiting and caching live in litellm_config.yaml.
-    This class is intentionally simple — complexity belongs in the config layer.
+    LiteLLM handles all provider routing, retries, rate limiting, and caching.
+    If LiteLLM is not available, it falls back to direct Gemini API calls.
     """
 
     def __init__(self):
@@ -57,6 +66,51 @@ class LLMClient:
             timeout=httpx.Timeout(90.0, connect=10.0),
             limits=httpx.Limits(max_connections=50, max_keepalive_connections=20),
         )
+
+    async def _complete_gemini_direct(
+        self,
+        system: str,
+        user: str,
+        max_tokens: int,
+    ) -> Tuple[str, str]:
+        """Call Gemini API directly using GEMINI_API_KEY (bypassing LiteLLM)."""
+        key = os.getenv("GEMINI_API_KEY")
+        if not key:
+            raise RuntimeError("GEMINI_API_KEY is not set")
+            
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={key}"
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": user}]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.1,
+                "maxOutputTokens": max_tokens
+            }
+        }
+        if system:
+            payload["systemInstruction"] = {
+                "parts": [{"text": system}]
+            }
+
+        resp = await self._http.post(
+            url,
+            headers={"Content-Type": "application/json"},
+            json=payload,
+            timeout=60.0,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        
+        try:
+            text = data["candidates"][0]["content"]["parts"][0]["text"]
+            return text, "gemini-2.0-flash (direct)"
+        except (KeyError, IndexError):
+            log.error("gemini_direct_parse_error", response=data)
+            raise RuntimeError("Failed to parse direct Gemini API response")
 
     async def complete(
         self,
@@ -67,21 +121,27 @@ class LLMClient:
         summary: bool = False,
     ) -> Tuple[str, str]:
         """
-        Send a completion request through LiteLLM proxy.
-        Returns (text, model_name_used).
-        LiteLLM handles all fallbacks internally — if this raises, all providers failed.
+        Send a completion request to LiteLLM proxy.
+        If the proxy is not running or fails, falls back to direct Gemini API.
         """
         model = _pick_model(user, force_fast=force_fast, summary=summary)
+
+        # Direct call if detected (e.g. on Railway free tier)
+        if USE_DIRECT_GEMINI:
+            try:
+                return await self._complete_gemini_direct(system, user, max_tokens)
+            except Exception as exc:
+                log.warning("direct_gemini_failed_trying_litellm", error=str(exc))
 
         try:
             resp = await self._http.post(
                 f"{LITELLM_URL}/v1/chat/completions",
                 headers={
                     "Authorization": f"Bearer {LITELLM_KEY}",
-                    "Content-Type":  "application/json",
+                    "Content-Type": "application/json",
                 },
                 json={
-                    "model":       model,
+                    "model": model,
                     "messages": [
                         {"role": "system", "content": system},
                         {"role": "user",   "content": user},
@@ -94,20 +154,27 @@ class LLMClient:
             data     = resp.json()
             text     = data["choices"][0]["message"]["content"]
             provider = data.get("model", model)
-            log.info("llm_success", model=model, provider=provider,
-                     tokens=data.get("usage", {}).get("total_tokens", 0))
+            log.info("llm_success", model=model, provider=provider)
             return text, provider
 
-        except httpx.HTTPStatusError as e:
-            body = e.response.text[:300]
-            log.error("litellm_http_error", status=e.response.status_code, body=body)
-            raise RuntimeError(f"LiteLLM {e.response.status_code}: {body}")
+        except (httpx.ConnectError, httpx.ConnectTimeout, httpx.HTTPStatusError, RuntimeError) as exc:
+            # Automatic fallback to direct Gemini if LiteLLM proxy connection failed
+            if os.getenv("GEMINI_API_KEY") and not USE_DIRECT_GEMINI:
+                log.info("litellm_failed_falling_back_to_direct_gemini", error=str(exc))
+                try:
+                    return await self._complete_gemini_direct(system, user, max_tokens)
+                except Exception as g_exc:
+                    raise RuntimeError(f"Direct Gemini fallback failed: {g_exc}") from exc
+            
+            # Re-raise or format error if fallback not available
+            if isinstance(exc, httpx.HTTPStatusError):
+                body = exc.response.text[:300]
+                log.error("litellm_http_error", status=exc.response.status_code, body=body)
+                raise RuntimeError(f"LiteLLM {exc.response.status_code}: {body}") from exc
+            raise RuntimeError(f"LiteLLM call failed: {exc}") from exc
         except httpx.TimeoutException:
             log.error("litellm_timeout", model=model)
             raise RuntimeError(f"LiteLLM timeout for model '{model}'")
-        except Exception as exc:
-            log.error("litellm_error", model=model, error=str(exc)[:200])
-            raise RuntimeError(f"LiteLLM call failed: {exc}")
 
     async def complete_json(
         self,
