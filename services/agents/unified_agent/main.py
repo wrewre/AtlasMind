@@ -33,7 +33,10 @@ import time
 import uuid
 from typing import Any, Dict, List
 
-sys.path.insert(0, "/app")
+# Add both /app and /app/agents to sys.path to support both monolith and standalone layouts
+for path in ["/app", "/app/agents"]:
+    if path not in sys.path:
+        sys.path.insert(0, path)
 
 from base_agent import BaseAgent
 from llm_client import get_llm_client
