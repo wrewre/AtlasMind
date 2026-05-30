@@ -5,7 +5,7 @@ version: "3.9"
 #
 # New in v2:
 #   - LiteLLM Proxy: unified LLM gateway (rate limiting, fallbacks, caching)
-#   - Auth: JWT + SQLite (persisted volume)
+#   - Auth: JWT + Neon PostgreSQL (persistent cloud database)
 #   - History: per-user, 10 graphs max
 #   - Provider stack: Together.ai → Groq×4 → Gemini → Ollama
 # ============================================================
@@ -76,15 +76,14 @@ services:
       dockerfile: services/api_gateway/Dockerfile
     environment:
       <<: *common-env
-      UPLOAD_DIR:  /app/uploads
-      REDIS_STREAM: document.ingested
-      JWT_SECRET:  ${JWT_SECRET:-change-me-in-production-use-256-bit-secret}
-      SQLITE_PATH: /app/data/mindmap.db
+      UPLOAD_DIR:    /app/uploads
+      REDIS_STREAM:  document.ingested
+      JWT_SECRET:    ${JWT_SECRET:-change-me-in-production-use-256-bit-secret}
+      DATABASE_URL:  ${DATABASE_URL}
     ports:
       - "8000:8000"
     volumes:
       - uploads_data:/app/uploads
-      - sqlite_data:/app/data
     depends_on:
       redis:
         condition: service_healthy
@@ -222,7 +221,6 @@ services:
 volumes:
   redis_data:
   uploads_data:
-  sqlite_data:      # persists user accounts and document history across restarts
 
 networks:
   mindmap-net:

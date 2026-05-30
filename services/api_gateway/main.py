@@ -3,7 +3,7 @@ API Gateway Service (Enterprise)
 ==================================
 Single entry point for all client requests. Enterprise additions:
   - JWT authentication (register / login / me endpoints)
-  - Per-user document history (SQLite, 10 graphs/user max)
+  - Per-user document history (PostgreSQL/Neon, 10 graphs/user max)
   - Proper SCAN-based Redis iteration (replaces O(N) KEYS)
   - ingestion_start timestamp for latency tracking
   - Per-user rate limiting (max 2 active jobs)

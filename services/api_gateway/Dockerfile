@@ -35,8 +35,8 @@ COPY services/consensus_engine /app/consensus_engine
 COPY services/graph_builder /app/graph_builder
 COPY services/orchestrator /app/orchestrator
 
-# Create upload and data directories
-RUN mkdir -p /app/uploads /app/data /app/graphs
+# Create upload and graphs directories
+RUN mkdir -p /app/uploads /app/graphs
 
 EXPOSE 8000
 
