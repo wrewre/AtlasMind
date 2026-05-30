@@ -808,7 +808,14 @@ async def timeout_watchdog(redis_client: aioredis.Redis):
     while True:
         await asyncio.sleep(30)
         try:
-            keys = await redis_client.keys("job:state:*")
+            # Use SCAN instead of KEYS to avoid blocking Redis on large datasets
+            keys = []
+            cur = 0
+            while True:
+                cur, batch = await redis_client.scan(cur, match="job:state:*", count=200)
+                keys.extend(batch)
+                if cur == 0:
+                    break
             now  = time.time()
             for key in keys:
                 raw = await redis_client.get(key)

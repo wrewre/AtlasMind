@@ -109,29 +109,109 @@ async def _call_llm_for_strategy(preview: str, filename: str, char_count: int) -
         preview=preview[:800]
     )
 
-    async with httpx.AsyncClient(timeout=25.0) as client:
-        # Try LiteLLM proxy first (handles all provider routing)
+    # 1. Try LiteLLM proxy first (only when NOT pointing at internal litellm:4000)
+    if "litellm:4000" not in LITELLM_URL:
         try:
-            resp = await client.post(
-                f"{LITELLM_URL}/v1/chat/completions",
-                headers={"Authorization": f"Bearer {LITELLM_KEY}"},
-                json={
-                    "model": "summary",
-                    "messages": [
-                        {"role": "system", "content": ORCHESTRATOR_SYSTEM},
-                        {"role": "user",   "content": user_msg},
-                    ],
-                    "max_tokens": 300,
-                    "temperature": 0.1,
-                },
-            )
-            if resp.status_code == 200:
-                text = resp.json()["choices"][0]["message"]["content"]
-                return _parse_strategy(text, "litellm")
+            async with httpx.AsyncClient(timeout=25.0) as client:
+                resp = await client.post(
+                    f"{LITELLM_URL}/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {LITELLM_KEY}"},
+                    json={
+                        "model": "summary",
+                        "messages": [
+                            {"role": "system", "content": ORCHESTRATOR_SYSTEM},
+                            {"role": "user",   "content": user_msg},
+                        ],
+                        "max_tokens": 300,
+                        "temperature": 0.1,
+                    },
+                )
+                if resp.status_code == 200:
+                    text = resp.json()["choices"][0]["message"]["content"]
+                    return _parse_strategy(text, "litellm")
         except Exception as e:
             log.warning("orchestrator_litellm_failed", error=str(e))
 
-    # All providers failed — use safe defaults
+    # 2. Groq Direct
+    groq_key = os.getenv("GROQ_API_KEY")
+    if groq_key:
+        try:
+            keys = [groq_key, os.getenv("GROQ_API_KEY_2"), os.getenv("GROQ_API_KEY_3"), os.getenv("GROQ_API_KEY_4")]
+            active_keys = [k for k in keys if k]
+            for key in active_keys:
+                try:
+                    async with httpx.AsyncClient(timeout=20.0) as client:
+                        resp = await client.post(
+                            "https://api.groq.com/openai/v1/chat/completions",
+                            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+                            json={
+                                "model": "llama-3.1-8b-instant",
+                                "messages": [
+                                    {"role": "system", "content": ORCHESTRATOR_SYSTEM},
+                                    {"role": "user",   "content": user_msg},
+                                ],
+                                "max_tokens": 300,
+                                "temperature": 0.1,
+                            },
+                        )
+                        if resp.status_code == 200:
+                            text = resp.json()["choices"][0]["message"]["content"]
+                            return _parse_strategy(text, "groq-direct")
+                        resp.raise_for_status()
+                except Exception as exc:
+                    log.warning("orchestrator_groq_key_failed", error=str(exc))
+                    continue
+        except Exception as e:
+            log.warning("orchestrator_groq_failed", error=str(e))
+
+    # 3. Gemini Direct
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    if gemini_key:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
+            payload = {
+                "contents": [{"role": "user", "parts": [{"text": user_msg}]}],
+                "generationConfig": {"temperature": 0.1, "maxOutputTokens": 300},
+                "systemInstruction": {"parts": [{"text": ORCHESTRATOR_SYSTEM}]},
+            }
+            async with httpx.AsyncClient(timeout=25.0) as client:
+                resp = await client.post(url, headers={"Content-Type": "application/json"}, json=payload)
+                resp.raise_for_status()
+                text = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+                return _parse_strategy(text, "gemini-direct")
+        except Exception as e:
+            log.warning("orchestrator_gemini_failed", error=str(e))
+
+    # 4. OpenRouter Direct
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    if openrouter_key:
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                resp = await client.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {openrouter_key}",
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": "https://github.com/wrewre/AtlasMind",
+                        "X-Title": "AtlasMind",
+                    },
+                    json={
+                        "model": "openrouter/free",
+                        "messages": [
+                            {"role": "system", "content": ORCHESTRATOR_SYSTEM},
+                            {"role": "user",   "content": user_msg},
+                        ],
+                        "max_tokens": 300,
+                        "temperature": 0.1,
+                    },
+                )
+                resp.raise_for_status()
+                text = resp.json()["choices"][0]["message"]["content"]
+                return _parse_strategy(text, "openrouter-direct")
+        except Exception as e:
+            log.warning("orchestrator_openrouter_failed", error=str(e))
+
+    # All providers failed — use safe rule-based defaults
     log.warning("orchestrator_all_providers_failed_using_defaults")
     return _default_strategy(filename, char_count)
 
