@@ -44,6 +44,7 @@ from database import (
     get_user_by_username,
     get_user_history,
     init_db,
+    close_db,
     update_document_stats,
 )
 
@@ -91,6 +92,7 @@ async def lifespan(app: FastAPI):
         t.cancel()
     if worker_tasks:
         await asyncio.gather(*worker_tasks, return_exceptions=True)
+    await close_db()
     await redis_client.aclose()
 
 
