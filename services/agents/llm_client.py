@@ -170,7 +170,7 @@ class LLMClient:
         system: str,
         user: str,
         max_tokens: int,
-        model: str = "meta-llama/llama-3-8b-instruct:free",
+        model: str = "openrouter/free",
     ) -> Tuple[str, str]:
         """Call OpenRouter API directly using OPENROUTER_API_KEY."""
         key = os.getenv("OPENROUTER_API_KEY")
@@ -271,7 +271,7 @@ class LLMClient:
             # 3. OpenRouter Direct (Free models)
             if os.getenv("OPENROUTER_API_KEY"):
                 try:
-                    or_model = "meta-llama/llama-3-8b-instruct:free"
+                    or_model = "openrouter/free"
                     return await self._complete_openrouter_direct(system, user, max_tokens, or_model)
                 except Exception as exc:
                     errors.append(f"OpenRouter: {exc}")
@@ -332,7 +332,7 @@ class LLMClient:
             
             if os.getenv("OPENROUTER_API_KEY"):
                 try:
-                    or_model = "meta-llama/llama-3-8b-instruct:free"
+                    or_model = "openrouter/free"
                     return await self._complete_openrouter_direct(system, user, max_tokens, or_model)
                 except Exception as or_exc:
                     log.error("direct_openrouter_fallback_failed", error=str(or_exc))

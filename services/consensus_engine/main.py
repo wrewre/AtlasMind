@@ -392,7 +392,7 @@ async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: f
                         "X-Title": "AtlasMind",
                     },
                     json={
-                        "model": "meta-llama/llama-3-8b-instruct:free",
+                        "model": "openrouter/free",
                         "messages": [
                             {"role": "system", "content": system},
                             {"role": "user",   "content": user},
