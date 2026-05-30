@@ -291,11 +291,13 @@ def detect_conflicts(edges: List[Dict]) -> List[Dict]:
 # ── Global summary synthesis ──────────────────────────────────────────────────
 
 async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: float = 0.1) -> str:
-    """Call LLM, trying LiteLLM first, falling back to Gemini, and then Groq direct if they fail."""
+    """Call LLM, trying LiteLLM first, falling back to Groq -> Gemini -> OpenRouter -> Ollama direct calls."""
     gemini_key = os.getenv("GEMINI_API_KEY")
     groq_key = os.getenv("GROQ_API_KEY")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    
     use_direct_fallback = False
-    if gemini_key or groq_key:
+    if gemini_key or groq_key or openrouter_key:
         if os.getenv("LITELLM_URL") is None or "litellm:4000" in LITELLM_URL:
             use_direct_fallback = True
 
@@ -321,7 +323,43 @@ async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: f
         except Exception as exc:
             log.warning("litellm_call_failed", error=str(exc))
 
-    # Fallback 1: Try direct Gemini call
+    # Direct fallback cascade if LiteLLM is not running or failed
+    errors = []
+    
+    # 1. Groq Direct
+    if groq_key:
+        try:
+            keys = [
+                groq_key,
+                os.getenv("GROQ_API_KEY_2"),
+                os.getenv("GROQ_API_KEY_3"),
+                os.getenv("GROQ_API_KEY_4"),
+            ]
+            active_keys = [k for k in keys if k]
+            for key in active_keys:
+                try:
+                    async with httpx.AsyncClient(timeout=30.0) as http:
+                        resp = await http.post(
+                            "https://api.groq.com/openai/v1/chat/completions",
+                            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+                            json={
+                                "model": "llama-3.3-70b-versatile",
+                                "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+                                "max_tokens": max_tokens,
+                                "temperature": temperature,
+                            },
+                        )
+                        if resp.status_code == 200:
+                            return resp.json()["choices"][0]["message"]["content"].strip()
+                        else:
+                            resp.raise_for_status()
+                except Exception as exc:
+                    log.warning("groq_key_failed_trying_next", error=str(exc))
+                    continue
+        except Exception as exc:
+            errors.append(f"Groq: {exc}")
+
+    # 2. Gemini Direct
     if gemini_key:
         try:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={gemini_key}"
@@ -338,43 +376,87 @@ async def call_llm(system: str, user: str, max_tokens: int = 800, temperature: f
                 data = resp.json()
                 return data["candidates"][0]["content"]["parts"][0]["text"].strip()
         except Exception as exc:
-            log.warning("gemini_direct_failed_trying_groq", error=str(exc))
+            errors.append(f"Gemini: {exc}")
+            log.warning("direct_gemini_failed_trying_openrouter", error=str(exc))
 
-    # Fallback 2: Try direct Groq call
-    if groq_key:
-        keys = [
-            os.getenv("GROQ_API_KEY"),
-            os.getenv("GROQ_API_KEY_2"),
-            os.getenv("GROQ_API_KEY_3"),
-            os.getenv("GROQ_API_KEY_4"),
-        ]
-        active_keys = [k for k in keys if k]
-        for key in active_keys:
-            try:
-                async with httpx.AsyncClient(timeout=45.0) as http:
-                    resp = await http.post(
-                        "https://api.groq.com/openai/v1/chat/completions",
-                        headers={
-                            "Authorization": f"Bearer {key}",
-                            "Content-Type": "application/json",
-                        },
-                        json={
-                            "model": "llama-3.3-70b-versatile",
-                            "messages": [
-                                {"role": "system", "content": system},
-                                {"role": "user",   "content": user}
-                            ],
-                            "max_tokens": max_tokens,
+    # 3. OpenRouter Direct
+    if openrouter_key:
+        try:
+            async with httpx.AsyncClient(timeout=45.0) as http:
+                resp = await http.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {openrouter_key}",
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": "https://github.com/wrewre/AtlasMind",
+                        "X-Title": "AtlasMind",
+                    },
+                    json={
+                        "model": "meta-llama/llama-3-8b-instruct:free",
+                        "messages": [
+                            {"role": "system", "content": system},
+                            {"role": "user",   "content": user},
+                        ],
+                        "max_tokens": max_tokens,
+                        "temperature": temperature,
+                    },
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                return data["choices"][0]["message"]["content"].strip()
+        except Exception as exc:
+            errors.append(f"OpenRouter: {exc}")
+            log.warning("direct_openrouter_failed_trying_ollama", error=str(exc))
+
+    # 4. Ollama Direct
+    ollama_host = os.getenv("OLLAMA_HOST")
+    if ollama_host and "ollama:11434" not in ollama_host:
+        try:
+            ollama_model = os.getenv("OLLAMA_MODEL", "llama3.2")
+            async with httpx.AsyncClient(timeout=120.0) as http:
+                resp = await http.post(
+                    f"{ollama_host}/api/generate",
+                    json={
+                        "model": ollama_model,
+                        "system": system,
+                        "prompt": user,
+                        "stream": False,
+                        "options": {
                             "temperature": temperature,
-                        },
-                    )
-                    if resp.status_code == 200:
-                        return resp.json()["choices"][0]["message"]["content"].strip()
-            except Exception as exc:
-                log.warning("groq_key_failed_trying_next", error=str(exc))
-                continue
+                            "num_predict": max_tokens,
+                        }
+                    },
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                return data.get("response", "").strip()
+        except Exception as exc:
+            errors.append(f"Ollama: {exc}")
+            log.error("direct_ollama_failed", error=str(exc))
 
-    raise RuntimeError("All LLM providers failed")
+    # Fallback to LiteLLM if we bypassed it initially but direct calls failed
+    if use_direct_fallback:
+        try:
+            async with httpx.AsyncClient(timeout=45.0) as http:
+                resp = await http.post(
+                    f"{LITELLM_URL}/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {LITELLM_KEY}"},
+                    json={
+                        "model": "summary",
+                        "messages": [
+                            {"role": "system", "content": system},
+                            {"role": "user",   "content": user}
+                        ],
+                        "max_tokens": max_tokens,
+                        "temperature": temperature,
+                    },
+                )
+                if resp.status_code == 200:
+                    return resp.json()["choices"][0]["message"]["content"].strip()
+        except Exception as exc:
+            errors.append(f"LiteLLM Fallback: {exc}")
+
+    raise RuntimeError(f"All LLM providers failed: {'; '.join(errors)}")
 
 
 async def synthesize_global_summary(chunk_summaries: List[Tuple[int, str]]) -> str:
